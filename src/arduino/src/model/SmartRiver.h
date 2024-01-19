@@ -10,10 +10,10 @@
 #include "devices/LCD.h"
 #include <avr/sleep.h>
 
-class CarWasher {
+class SmartRiver {
 
     public: 
-        CarWasher();
+        SmartRiver();
         void init();
 
         bool isNormal();
@@ -27,7 +27,7 @@ class CarWasher {
         void setAllarmTooLow();
         void setPreAllarmTooHigh();
         void setAllarmTooHigh();
-        void setAllarmTooHigh();
+        void setAllarmTooHighCritic();
 
         State getState();
 

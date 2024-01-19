@@ -4,9 +4,9 @@ Water Level Monitoring subsystem (based on ESP):
 - se il sistema lavora bene (network ok e sending data ok) led verde on e led rosso off; altrimenti viceversa
 
 River Monitoring Service subsystem  (backend - running on a PC server):
-- WL1<=lvl<=WL2 -> NORMAL state: frequenza monitorazione F1; apertura valvole 25%
+- WL1<=lvl<=WL2 -> NORMAL state: frequenza monitoraggio F1; apertura valvole 25%
 - lvl<WL1 -> ALARM-TOO-LOW: apertura valvole 0%
-- WL2<lvl<=WL3 -> PRE-ALARM-TOO-HIGH: frequenza monitorazione F2 (F2>F1)
+- WL2<lvl<=WL3 -> PRE-ALARM-TOO-HIGH: frequenza monitoraggio F2 (F2>F1)
 - WL3<lvl<=WL4 -> ALARM-TOO-HIGH: frequenza F2; apertura valvole 50%
 - lvl>WL4 -> ALARM-TOO-HIGH-CRITIC: frequenza F2; apertura valvole 100%
 

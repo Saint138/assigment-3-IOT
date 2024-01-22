@@ -1,6 +1,6 @@
 #include "ButtonStateTask.h"
 
-ButtonStateTask::ButtonStateTask(ServoMotor* servoMotor) : automaticTask(servoMotor), manualTask(servoMotor) {
+ButtonStateTask::ButtonStateTask(ServoMotor* servoMotor) : automaticTask(servoMotor, sonarSensor), manualTask(servoMotor, potentiometer) {
   this->servo = servoMotor;
 }
 

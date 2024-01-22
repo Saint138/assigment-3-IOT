@@ -1,6 +1,6 @@
 #include "AutomaticTask.h"
 
-AutomaticTask::AutomaticTask(ServoMotor* servoMotor, SonarSensor* sonarSensor) {
+AutomaticTask::AutomaticTask(ServoMotor* servoMotor, Sonar* sonarSensor) {
   this->servo = servoMotor;
   this->sonar = sonarSensor;
 }

@@ -13,6 +13,8 @@ public:
 
 private:
   ServoMotor* servo;
+  Sonar* sonarSensor;
+  Potentiometer* potentiometer;
   enum { AUTOMATIC, MANUAL } buttonState;
   bool lastButtonState;
   AutomaticTask automaticTask;

@@ -84,9 +84,9 @@ long SmartRiver::getCurrentTime(){
     return time;
 }
 
-bool SmartRiver::isButtonPressed(){
+bool SmartRiver::isButtonClicked(){
     button->sync();
-    return button->isPressed();
+    return button->isClicked();
 }
 
 bool SmartRiver::isLightOn(int pin){

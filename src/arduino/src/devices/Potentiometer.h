@@ -11,6 +11,7 @@ public:
   int getShaftValue();
 private:
   int pin;
+  int last;
 };
 
 

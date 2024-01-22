@@ -35,7 +35,7 @@ class SmartRiver {
         double getCurrentDistance();
         long getCurrentTime();
     
-        bool isButtonPressed();
+        bool isButtonClicked();
 
         bool isLightOn(int pin);
         void turnLightOn(int pin);

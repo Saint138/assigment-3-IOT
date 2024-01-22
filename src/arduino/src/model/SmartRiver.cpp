@@ -42,13 +42,14 @@ bool SmartRiver::IsAllarmTooHighCritic(){
 bool SmartRiver::isAllarmTooLow(){
     return state == ALLARMTOOLOW;
 }
-/**/
+
 void SmartRiver::setNormal(){
     state = NORMAL;
-    /*detachInterrupt(digitalPinToInterrupt(PIR_PIN));
+    
     temp=millis();
-    turnLightOn(LED_1);
-    LCDwrite("Welcome!");*/
+    turnLightOn(LED_2);
+    LCDwrite("Valve: 25%");
+
 }
 
 void SmartRiver::setAllarmTooHigh(){

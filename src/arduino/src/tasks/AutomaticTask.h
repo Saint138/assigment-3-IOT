@@ -3,17 +3,17 @@
 
 #include "Task.h"
 #include "../devices/ServoMotor.h"
-#include "../devices/SonarSensor.h"
+#include "../devices/Sonar.h"
 
 class AutomaticTask : public Task {
 public:
-  AutomaticTask(ServoMotor* servoMotor, SonarSensor* sonarSensor);
+  AutomaticTask(ServoMotor* servoMotor, Sonar* Sonar);
   void init(int period);
   void tick();
 
 private:
   ServoMotor* servo;
-  SonarSensor* sonar;
+  Sonar* sonar;
 };
 
 #endif

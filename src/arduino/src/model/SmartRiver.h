@@ -50,7 +50,8 @@ class SmartRiver {
         void sleep();
 
     private:
-
+    
+        double temp;
         long time;
         double distance;
         bool led01On;

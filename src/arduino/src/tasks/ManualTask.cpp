@@ -11,7 +11,7 @@ void ManualTask::init(int period) {
 
 void ManualTask::tick() {
   // Leggi il valore dal potenziometro (da implementare nella tua applicazione)
-  int potValue = 0;  // Sostituire con la lettura del potenziometro
+  int potValue = potentiometer->getShaftValue();  // Sostituire con la lettura del potenziometro
 
   // Muovi il servo alla posizione calcolata
   servo->setPosition(potValue);

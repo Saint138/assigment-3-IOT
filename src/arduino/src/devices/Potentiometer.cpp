@@ -6,7 +6,7 @@ Potentiometer::Potentiometer(int pin) {
 
 int attuale;
 
-int Potentiometer::shaft() {
+int Potentiometer::getShaftValue() {
   int nuovo = analogRead(pin);
   //Serial.println(nuovo);
   if (nuovo != attuale) {

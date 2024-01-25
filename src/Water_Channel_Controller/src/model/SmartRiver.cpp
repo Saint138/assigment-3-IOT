@@ -13,9 +13,6 @@ SmartRiver::SmartRiver() {
 
 void SmartRiver::init(){
     button = new ButtonImpl(BUT_1);
-    led01 = new Led(LED_1);
-    led02 = new Led(LED_2);
-    /*sonar = new Sonar(ECHO_PIN, TRIG_PIN, MAXTIME);*/
     servoMotor = new ServoMotorImpl(SERVO_PIN);
     lcd = new LCD();
     servoMotor->on();
@@ -76,10 +73,6 @@ State SmartRiver::getState() {
     return state;
 }
 
-double SmartRiver::getCurrentDistance(){
-    return this->sonar->getDistance();
-}
-
 long SmartRiver::getCurrentTime(){
     return time;
 }
@@ -87,35 +80,6 @@ long SmartRiver::getCurrentTime(){
 bool SmartRiver::isButtonClicked(){
     button->sync();
     return button->isClicked();
-}
-
-bool SmartRiver::isLightOn(int pin){
-    if(pin == LED_1){
-        return led01On;
-    }else if(pin == LED_2){
-        return led02On;
-    }
-    return false;
-}
-
-void SmartRiver::turnLightOn(int pin){
-    if(pin == LED_1){
-        led01->switchOn();
-        led01On = true;
-    }else if(pin == LED_2){
-        led02->switchOn();
-        led02On = true;
-    }
-}
-
-void SmartRiver::turnLightOff(int pin){
-    if(pin == LED_1){
-        led01->switchOff();
-        led01On = false;
-    }else if(pin == LED_2){
-        led02->switchOff();
-        led02On = false;
-    }
 }
 
 void SmartRiver::LCDwrite(String msg){

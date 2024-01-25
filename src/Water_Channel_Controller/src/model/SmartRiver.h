@@ -4,8 +4,6 @@
 #include <Arduino.h>
 #include "config.h"
 #include "devices/ButtonImpl.h"
-#include "devices/Led.h"
-#include "devices/Sonar.h"
 #include "devices/ServoMotorImpl.h"
 #include "devices/LCD.h"
 #include <avr/sleep.h>
@@ -59,9 +57,6 @@ class SmartRiver {
        //manca roba esp32
     
         Button* button;
-        Led* led01;
-        Led* led02;
-        Sonar* sonar;
         ServoMotor* servoMotor;
         LCD* lcd;
         State state;

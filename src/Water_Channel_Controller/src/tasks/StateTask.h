@@ -3,7 +3,7 @@
 
 #include "Task.h"
 #include "../devices/ButtonImpl.h"
-#include <model/SmartRiver.h>
+#include "../model/SmartRiver.h"
 
 bool automatic;
 

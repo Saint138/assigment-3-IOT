@@ -5,14 +5,14 @@ StateTask::StateTask(SmartRiver *smartRiver) {
   automatic = true;
 }
 
-void SerialTask::tick() {
-    if(isButtonClicked()){
+void StateTask::tick() {
+    if(smartRiver->isButtonClicked()){
         if(automatic){
             automatic = false;
-            LCDwrite("Manual");
+            smartRiver->LCDwrite("Manual");
         }else{
             automatic = true;
-            LCDwrite("Automatic");
+            smartRiver->LCDwrite("Automatic");
         }
     }
 }

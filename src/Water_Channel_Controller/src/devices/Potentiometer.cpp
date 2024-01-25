@@ -2,15 +2,9 @@
 #include "Arduino.h"
 
 Potentiometer::Potentiometer(int pin) {
-    this->pin = pin;
+    pinMode(pin, INPUT);
 }
 
-
-int Potentiometer::getShaftValue() {
-  int nuovo = analogRead(pin);
-  //Serial.println(nuovo);
-  if (nuovo != last) {
-    last = nuovo;
-  }
-  return last;
+int Potentiometer::getValue() {
+    return analogRead(pin);
 }

@@ -1,8 +1,11 @@
 #include "ValveTask.h"
 #include "StateTask.h"
 
-ValveTask::ValveTask(ServoMotor* servoMotor){
+ValveTask::ValveTask(ServoMotor* servoMotor, SmartRiver* smartRiver, Potentiometer* potentiometer, LCD* lcd) {
   this->servo = servoMotor;
+  this->smartRiver = smartRiver;
+  this->potentiometer = potentiometer;
+  this->lcd = lcd;
 }
   
 void ValveTask::init(int period){
@@ -20,10 +23,53 @@ void ValveTask::tick(){
   switch (valvestate){
     case AUTO:
       /*switch con casi aperture*/
+      switch(smartRiver->getState()){
+        case NORMAL:
+          servo->setPosition(setAngle(25)); /*da aggiornare, valore out potenziometro*/
+          lcd->video(25, "AUTOMATIC");
+          lcd->clearDisplay();
+          
+        break;
+
+        case PREALLARMTOOHIGH:
+          servo->setPosition(setAngle(25)); /*da aggiornare, valore out potenziometro*/
+          lcd->video(25, "AUTOMATIC");
+          lcd->clearDisplay();
+
+        break;
+
+        case ALLARMTOOHIGH:
+          servo->setPosition(setAngle(50)); /*da aggiornare, valore out potenziometro*/
+          lcd->video(50, "AUTOMATIC");
+          lcd->clearDisplay();
+
+        break;
+
+        case ALLARMTOOHIGHCRITIC:
+          servo->setPosition(setAngle(100)); /*da aggiornare, valore out potenziometro*/
+          lcd->video(100, "AUTOMATIC");
+          lcd->clearDisplay();
+        break;
+
+        case ALLARMTOOLOW:
+          servo->setPosition(setAngle(0)); /*da aggiornare, valore out potenziometro*/
+          lcd->video(0, "AUTOMATIC");
+          lcd->clearDisplay();
+        break;
+
+      }
     break;
 
     case MANUAL:
-      servo->setPosition(0); /*da aggiornare, valore out potenziometro*/
+      int val = map(potentiometer->getValue(), 0, 1023, 0, 100);
+      servo->setPosition(setAngle(val)); /*da aggiornare, valore out potenziometro*/
+      lcd->video(val, "MANUAL");
     break;
   }
+
+  
 }
+
+int setAngle(int percentage) {
+    return percentage*180/100;
+  }

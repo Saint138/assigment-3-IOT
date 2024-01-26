@@ -40,7 +40,6 @@ PubSubClient client(espClient);
 
 unsigned long lastMsgTime = 0;
 char msg1[MSG_BUFFER_SIZE];
-char msg2[MSG_BUFFER_SIZE];
  
 TaskHandle_t Task1;
 
@@ -133,8 +132,6 @@ void reconnect() {
 
 
 void setup() {
-  Serial.begin(9600);
-
   greenLed = new Led (GREEN_LED);
   redLed = new Led (RED_LED);
 

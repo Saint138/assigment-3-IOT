@@ -157,13 +157,13 @@ void loop() {
   unsigned long now = millis();
   StaticJsonDocument<56> waterLevelJson;
 
-  if (now - lastMsgTime > 10000) {
+  if (now - lastMsgTime > (1000 / frequency)) {
     lastMsgTime = now;
 
     float waterLevel = functions::getWaterLevel();
 
     /* creating a msg in the buffer */
-    snprintf (msg1, MSG_BUFFER_SIZE, "Water Level: %.2f", waterLevel);
+    snprintf(msg1, MSG_BUFFER_SIZE, "Water Level: %.2f", waterLevel);
 
     Serial.println(String("Publishing message: ") + msg1);
 
@@ -173,7 +173,6 @@ void loop() {
 
     /* publishing the msg */
     client.publish(topic2, msg1);
-
-    delay(1000/frequency);
   }
 }
+

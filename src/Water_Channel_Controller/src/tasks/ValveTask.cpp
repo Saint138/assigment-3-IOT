@@ -1,9 +1,9 @@
 #include "ValveTask.h"
 #include "StateTask.h"
 
-ValveTask::ValveTask(ServoMotor* servoMotor, SmartRiver* smartRiver, Potentiometer* potentiometer, LCD* lcd) {
+ValveTask::ValveTask(ServoMotor* servoMotor, WaterController* waterController, Potentiometer* potentiometer, LCD* lcd) {
   this->servo = servoMotor;
-  this->smartRiver = smartRiver;
+  this->waterController = waterController;
   this->potentiometer = potentiometer;
   this->lcd = lcd;
 }
@@ -23,7 +23,7 @@ void ValveTask::tick(){
   switch (valvestate){
     case AUTO:
       /*switch con casi aperture*/
-      switch(smartRiver->getState()){
+      switch(waterController->getState()){
         case NORMAL:
           servo->setPosition(setAngle(25)); /*da aggiornare, valore out potenziometro*/
           lcd->video(25, "AUTOMATIC");

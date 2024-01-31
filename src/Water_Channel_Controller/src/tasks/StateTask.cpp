@@ -1,18 +1,18 @@
 #include "StateTask.h"
 
-StateTask::StateTask(SmartRiver *smartRiver) {
-  this->smartRiver = smartRiver;
+StateTask::StateTask(WaterController* waterController) {
+  this->waterController = waterController;
   automatic = true;
 }
 
 void StateTask::tick() {
-    if(smartRiver->isButtonClicked()){
+    if(waterController->isButtonClicked()){
         if(automatic){
             automatic = false;
-            smartRiver->LCDwrite("Manual");
+            waterController->LCDwrite("Manual");
         }else{
             automatic = true;
-            smartRiver->LCDwrite("Automatic");
+            waterController->LCDwrite("Automatic");
         }
     }
 }

@@ -2,10 +2,10 @@
 
 #include "config.h"
 
-SmartRiver* SerialCommunication::pSmartRiver;
+WaterController* SerialCommunication::waterController;
 
-SerialCommunication::SerialCommunication(SmartRiver* pcw) {
-    pSmartRiver = pcw; 
+SerialCommunication::SerialCommunication(WaterController* pcw) {
+    waterController = pcw; 
 }
 
 void SerialCommunication::init() {
@@ -13,15 +13,27 @@ void SerialCommunication::init() {
 }
 
 void SerialCommunication::update() {
-    /*pSmartRiver->getCurrentTemp();
-    String msg = stateAsString(pSmartRiver->getState()) + ":" + pSmartRiver->getCurrentTemp() + ":" + pSmartRiver->getCurrentDistance();
-    Serial.println(msg);*/
+    if(isMsgAvailable) {
+        String msg = getMsg();
+
+        if(msg == "NORMAL") {
+            waterController->setNormal();
+        } else if(msg == "ALLARMTOOHIGH") {
+            waterController->setAllarmTooHigh();
+        } else if(msg == "ALLARMTOOHIGHCRITIC") {
+            waterController->setAllarmTooHighCritic();
+        } else if(msg == "PREALLARMTOOHIGH") {
+            waterController->setPreAllarmTooHigh();
+        } else if(msg == "ALLARMTOOLOW") {
+            waterController->setAllarmTooLow();
+        }
+    }
 }
 
 bool SerialCommunication::isMsgAvailable() {
     return Serial.available() > 0;
 }
-    
+
 String SerialCommunication::getMsg() {
     String msg = "";
     char c;

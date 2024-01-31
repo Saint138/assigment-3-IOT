@@ -1,12 +1,12 @@
 #ifndef __SERIAL_COMMUNICATION__
 #define __SERIAL_COMMUNICATION__
 
-#include "model/SmartRiver.h" 
+#include "model/WaterController.h" 
 #include "config.h"
 
 class SerialCommunication {
 public:
-    SerialCommunication(SmartRiver* pcw);
+    SerialCommunication(WaterController* pcw);
     void init();
     void update();
     bool isMsgAvailable();
@@ -14,7 +14,7 @@ public:
     
 
 private:
-    static SmartRiver* pSmartRiver;
+    static WaterController* waterController;
     String stateAsString(State currentState);
 };
 

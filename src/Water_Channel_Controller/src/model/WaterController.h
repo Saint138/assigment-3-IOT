@@ -1,25 +1,19 @@
-#ifndef __SMARTRIVER__
-#define __SMARTRIVER__
+#ifndef __WATERCONTROLLER__
+#define __WATERCONTROLLER__
 
 #include <Arduino.h>
+#include "LiquidCrystal_I2C.h"
+#include "TimerOne.h"
 #include "config.h"
 #include "devices/ButtonImpl.h"
 #include "devices/ServoMotorImpl.h"
 #include "devices/LCD.h"
-#include <avr/sleep.h>
 
-class SmartRiver {
+class WaterController {
 
     public: 
-        SmartRiver();
+        WaterController(Button* button, ServoMotor* servoMotor, LCD* lcd);
         void init();
-
-        bool isNormal();
-        bool isAllarmTooLow();
-        bool isPreAllarmTooHigh();
-        bool isAllarmTooHigh();
-        bool IsAllarmTooHighCritic();
-       
         
         void setNormal();
         void setAllarmTooLow();
@@ -29,15 +23,10 @@ class SmartRiver {
 
         State getState();
 
-    
         double getCurrentDistance();
         long getCurrentTime();
     
         bool isButtonClicked();
-
-        bool isLightOn(int pin);
-        void turnLightOn(int pin);
-        void turnLightOff(int pin);
 
         void LCDwrite(String text);
 
@@ -45,16 +34,11 @@ class SmartRiver {
         void ServoMotorOff();
         void MotorPosition(int position);
 
-        void sleep();
-
     private:
     
         double temp;
         long time;
         double distance;
-        bool led01On;
-        bool led02On;
-       //manca roba esp32
     
         Button* button;
         ServoMotor* servoMotor;

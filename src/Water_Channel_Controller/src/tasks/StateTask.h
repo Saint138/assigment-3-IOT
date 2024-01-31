@@ -2,8 +2,7 @@
 #define __STATETASK__
 
 #include "Task.h"
-#include "../devices/ButtonImpl.h"
-#include "../model/SmartRiver.h"
+#include "../model/WaterController.h"
 
 bool automatic;
 
@@ -11,10 +10,10 @@ class StateTask: public Task {
 public:
   
   void tick();
-  StateTask(SmartRiver *smartRiver);
+  StateTask(WaterController* waterController);
 
 private:
-SmartRiver *smartRiver;
+WaterController* waterController;
 
 };
 

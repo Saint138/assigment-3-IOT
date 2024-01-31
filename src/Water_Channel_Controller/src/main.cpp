@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <tasks/Task.h>
 #include "kernel/Scheduler.h"
-#include "kernel/SerialCommunication.h"
 #include "tasks/StateTask.h"
 #include "tasks/ValveTask.h"
 #include "tasks/SerialTask.h"

@@ -1,4 +1,4 @@
-package src;
+package src.main.java.river_monitoring_service;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

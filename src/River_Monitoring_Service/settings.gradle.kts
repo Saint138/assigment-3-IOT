@@ -8,4 +8,4 @@
  */
 
 rootProject.name = "River_Monitoring_Service"
-include("app")
+include("lib")

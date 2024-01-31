@@ -9,21 +9,25 @@ void SerialTask::tick() {
     String msg = getMsg(); 
 
     if(msg == "NORMAL") {
+        automatic = true;
         waterController->setNormal();
     } else if(msg == "ALLARMTOOHIGH") {
+        automatic = true;
         waterController->setAllarmTooHigh();
     } else if(msg == "ALLARMTOOHIGHCRITIC") {
         waterController->setAllarmTooHighCritic();
     } else if(msg == "PREALLARMTOOHIGH") {
+        automatic = true;
         waterController->setPreAllarmTooHigh();
     } else if(msg == "ALLARMTOOLOW") {
+        automatic = true;
         waterController->setAllarmTooLow();
+    } else {
+        automatic = false;
+        valveOpening = msg.toInt();
     }
 
-    StaticJsonDocument<112> body;
     StaticJsonDocument<112> data;
-
-    deserializeJson(body, msg);
 
     data["automatic"] = automatic;
     data["valveOpening"] = valveOpening;

@@ -9,10 +9,9 @@ void StateTask::tick() {
     if(waterController->isButtonClicked()){
         if(automatic){
             automatic = false;
-            waterController->LCDwrite("Manual");
         }else{
             automatic = true;
-            waterController->LCDwrite("Automatic");
         }
     }
+    waterController->LCDwrite(automatic ? "Automatic" : "Manual");
 }

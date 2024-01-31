@@ -5,6 +5,8 @@
 #include "../model/WaterController.h"
 #include "../devices/Potentiometer.h"
 
+int valveOpening;
+
 class ValveTask: public Task {
 public:
   ValveTask(ServoMotor* servoMotor, WaterController* waterController, Potentiometer* potentiometer, LCD* lcd);
@@ -14,10 +16,10 @@ public:
 private:
   WaterController* waterController;
   ServoMotor* servo;
-  enum { AUTO, MANUAL} valvestate; 
-  int setAngle(int percentage);
   Potentiometer* potentiometer;
   LCD* lcd;
+  enum { AUTO, MANUAL} valvestate; 
+  int setAngle(int percentage);
 };
 
 #endif

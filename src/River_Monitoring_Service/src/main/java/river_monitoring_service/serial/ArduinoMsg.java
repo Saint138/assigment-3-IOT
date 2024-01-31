@@ -1,4 +1,4 @@
-package src.serial;
+package src.main.java.river_monitoring_service.serial;
 
 public class ArduinoMsg {
 

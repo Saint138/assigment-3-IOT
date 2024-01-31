@@ -1,4 +1,4 @@
-package src.http;
+package src.main.java.river_monitoring_service.http;
 
 /**
  * Class that represents the message sent through the dashboard.

@@ -7,14 +7,14 @@ import java.util.TimerTask;
 
 import com.google.gson.Gson;
 
-import RoomService.http.DashboardMessage;
-import RoomService.http.RoomResource;
-import RoomService.mqtt.MQTTAgent;
-import RoomService.mqtt.MQTTMovement;
-import RoomService.mqtt.MQTTLight;
-import RoomService.serial.CommChannel;
-import RoomService.serial.SerialCommChannel;
-import RoomService.serial.SerialCommunication;
+import src.main.java.river_monitoring_service.http.DashboardMessage;
+import src.main.java.river_monitoring_service.http.RoomResource;
+import src.main.java.river_monitoring_service.mqtt.MQTTAgent;
+import src.main.java.river_monitoring_service.mqtt.MQTTMovement;
+import src.main.java.river_monitoring_service.mqtt.MQTTLight;
+import src.main.java.river_monitoring_service.serial.CommChannel;
+import src.main.java.river_monitoring_service.serial.SerialCommChannel;
+import src.main.java.river_monitoring_service.serial.SerialCommunication;
 import io.vertx.core.Vertx;
 
 public class RunService {

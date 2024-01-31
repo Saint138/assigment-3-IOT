@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 
-import RoomService.http.DashboardMessage;
-import RoomService.mqtt.MQTTMovement;
-import RoomService.mqtt.MQTTLight;
+import src.main.java.river_monitoring_service.http.DashboardMessage;
+import src.main.java.river_monitoring_service.mqtt.MQTTMovement;
+import src.main.java.river_monitoring_service.mqtt.MQTTLight;
 
 /**
  * Class to keep ESP messages history (movement and day), dashboard messages (to be send to Arduino)

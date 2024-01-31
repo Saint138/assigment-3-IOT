@@ -1,4 +1,4 @@
-package RoomService.mqtt;
+package src.main.java.river_monitoring_service.mqtt;
 
 import java.time.LocalDateTime;
 

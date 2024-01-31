@@ -1,11 +1,11 @@
-package src.mqtt;
+package src.main.java.river_monitoring_service.mqtt;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
 import com.google.gson.Gson;
 
-import RoomService.RoomState;
+import src.main.java.river_monitoring_service.RoomState;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.mqtt.MqttClient;
 

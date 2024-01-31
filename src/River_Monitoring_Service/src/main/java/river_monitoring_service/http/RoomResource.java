@@ -1,6 +1,6 @@
-package RoomService.http;
+package src.main.java.river_monitoring_service.http;
 
-import RoomService.RoomState;
+import src.main.java.river_monitoring_service.RoomState;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;

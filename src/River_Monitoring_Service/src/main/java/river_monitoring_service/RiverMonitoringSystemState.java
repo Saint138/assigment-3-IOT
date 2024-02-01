@@ -1,4 +1,4 @@
-package src.main.java.river_monitoring_service;
+package /* src.main.java. */river_monitoring_service;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -6,33 +6,33 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 
-import src.main.java.river_monitoring_service.http.DashboardMessage;
-import src.main.java.river_monitoring_service.mqtt.MQTTMovement;
-import src.main.java.river_monitoring_service.mqtt.MQTTLight;
+import /* src.main.java. */river_monitoring_service.http.DashboardMessage;
+import /* src.main.java. */river_monitoring_service.mqtt.MQTTMovement;
+import /* src.main.java. */river_monitoring_service.mqtt.MQTTLight;
 
 /**
  * Class to keep ESP messages history (movement and day), dashboard messages (to be send to Arduino)
  * and Arduino light history.
  * */
-public class RoomState {
+public class RiverMonitoringSystemState {
 
-	private static RoomState instance = null;
+	private static RiverMonitoringSystemState instance = null;
 
 	private List<MQTTLight> dayHistory;
 	private List<MQTTLight> lightStateHistory;
 	private List<MQTTMovement> movementStateHistory;
 	private Queue<DashboardMessage> dashboardMessages;
 
-	private RoomState() {
+	private RiverMonitoringSystemState() {
 		this.dayHistory = new ArrayList<>();
 		this.movementStateHistory = new ArrayList<>();
 		this.dashboardMessages = new ArrayDeque<>();
 		this.lightStateHistory = new ArrayList<>();
 	}
 
-	public static RoomState getInstance() {
+	public static RiverMonitoringSystemState getInstance() {
             if (instance == null) {
-                instance = new RoomState();
+                instance = new RiverMonitoringSystemState();
             }
             return instance;
         }

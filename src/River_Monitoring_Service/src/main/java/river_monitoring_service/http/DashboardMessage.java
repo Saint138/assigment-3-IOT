@@ -1,28 +1,28 @@
-package src.main.java.river_monitoring_service.http;
+package /* src.main.java. */river_monitoring_service.http;
 
 /**
  * Class that represents the message sent through the dashboard.
  * */
 public class DashboardMessage {
 
-    private final boolean light;
-    private final int angle;
+    private final boolean clicked;
+    private final int valveOpening;
 
-    public DashboardMessage(final boolean light, final int angle) {
-        this.light = light;
-        this.angle = angle;
+    public DashboardMessage(final boolean clicked, final int valveOpening) {
+        this.clicked = clicked;
+        this.valveOpening = valveOpening;
     }
 
-	public boolean isLight() {
-        return light;
+	public boolean isClicked() {
+        return clicked;
     }
 
-    public int getAngle() {
-        return angle;
+    public int getValveOpening() {
+        return valveOpening;
     }
 
     @Override
     public String toString() {
-    	return "DashboardMessage [light=" + light + ", angle=" + angle + "]";
+    	return "DashboardMessage [clicked=" + clicked + ", valveOpening=" + valveOpening + "]";
     }
 }

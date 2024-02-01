@@ -1,4 +1,4 @@
-package src.main.java.river_monitoring_service.serial;
+package /* src.main.java. */river_monitoring_service.serial;
 
 /**
  * Simple interface for an async msg communication channel

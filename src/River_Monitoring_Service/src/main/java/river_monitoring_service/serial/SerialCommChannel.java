@@ -1,4 +1,4 @@
-package src.main.java.river_monitoring_service.serial;
+package /* src.main.java. */river_monitoring_service.serial;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;

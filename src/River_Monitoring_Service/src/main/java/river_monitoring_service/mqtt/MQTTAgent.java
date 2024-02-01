@@ -1,11 +1,11 @@
-package src.main.java.river_monitoring_service.mqtt;
+package /* src.main.java. */river_monitoring_service.mqtt;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
 import com.google.gson.Gson;
 
-import src.main.java.river_monitoring_service.RoomState;
+import /* src.main.java. */river_monitoring_service.RiverMonitoringSystemState;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.mqtt.MqttClient;
 
@@ -36,13 +36,13 @@ public class MQTTAgent extends AbstractVerticle {
                     if (s.payload().toString().contains("{")) {
                         MQTTLight light = msgToEsp.fromJson(s.payload().toString(), MQTTLight.class);
                         light.setMsgDate(LocalDateTime.now().toString());
-                        RoomState.getInstance().getDayHistory().add(light);
+                        RiverMonitoringSystemState.getInstance().getDayHistory().add(light);
                     }
                 } else {
                     if (s.payload().toString().contains("{")) {
                         MQTTMovement movement = msgToEsp.fromJson(s.payload().toString(), MQTTMovement.class);
                         movement.setDateTime(LocalDateTime.now().toString());
-                        RoomState.getInstance().getMovementStateHistory().add(movement);
+                        RiverMonitoringSystemState.getInstance().getMovementStateHistory().add(movement);
                     }
                 }
 

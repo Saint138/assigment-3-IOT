@@ -15,6 +15,7 @@ void SerialTask::tick() {
         automatic = true;
         waterController->setAllarmTooHigh();
     } else if(msg == stateAsString(ALLARMTOOHIGHCRITIC)) {
+        automatic = true;
         waterController->setAllarmTooHighCritic();
     } else if(msg == stateAsString(PREALLARMTOOHIGH)) {
         automatic = true;

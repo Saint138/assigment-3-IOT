@@ -1,4 +1,4 @@
-package src.main.java.river_monitoring_service;
+package /* src.main.java. */river_monitoring_service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -7,21 +7,21 @@ import java.util.TimerTask;
 
 import com.google.gson.Gson;
 
-import src.main.java.river_monitoring_service.http.DashboardMessage;
-import src.main.java.river_monitoring_service.http.RoomResource;
-import src.main.java.river_monitoring_service.mqtt.MQTTAgent;
-import src.main.java.river_monitoring_service.mqtt.MQTTMovement;
-import src.main.java.river_monitoring_service.mqtt.MQTTLight;
-import src.main.java.river_monitoring_service.serial.CommChannel;
-import src.main.java.river_monitoring_service.serial.SerialCommChannel;
-import src.main.java.river_monitoring_service.serial.SerialCommunication;
+import /* src.main.java. */river_monitoring_service.http.DashboardMessage;
+import /* src.main.java. */river_monitoring_service.http.RoomResource;
+import /* src.main.java. */river_monitoring_service.mqtt.MQTTAgent;
+import /* src.main.java. */river_monitoring_service.mqtt.MQTTMovement;
+import /* src.main.java. */river_monitoring_service.mqtt.MQTTLight;
+import /* src.main.java. */river_monitoring_service.serial.CommChannel;
+import /* src.main.java. */river_monitoring_service.serial.SerialCommChannel;
+import /* src.main.java. */river_monitoring_service.serial.SerialCommunication;
 import io.vertx.core.Vertx;
 
 public class RunService {
 
 	// Vars with synchronized method used in multiple threads
 	private static boolean automatic = true;
-	private static boolean isBtActive = false;
+	private static boolean isFrontendActive = false;
 	private static SerialCommunication lastAutomaticMessage;
 
     public static void main(String[] args) {
@@ -48,22 +48,19 @@ public class RunService {
             final Thread sender = new Thread(() -> {
                 while (true) {
 
-                    Optional<MQTTLight> lastDay = RoomState.getInstance().getLastDay();
-                    Optional<MQTTMovement> movement = RoomState.getInstance().getLastMovementState();
-                    Optional<DashboardMessage> dashboardMsg = RoomState.getInstance().getLastDashboardMessage();
-
+                    Optional<MQTTLight> lastDay = RiverMonitoringSystemState.getInstance().getLastDay();
+                    Optional<MQTTMovement> movement = RiverMonitoringSystemState.getInstance().getLastMovementState();
+                    Optional<DashboardMessage> dashboardMsg = RiverMonitoringSystemState.getInstance().getLastDashboardMessage();
+                    /* TODO */
                     if (dashboardMsg.isPresent()) {
                     	setAutomatic(false);
-                    	lastAutomaticMessage = new SerialCommunication(false, false,
-                    			dashboardMsg.get().isLight(), dashboardMsg.get().getAngle(), false, false);
-
+                    	lastAutomaticMessage = new SerialCommunication(false, 0);
                     	startTimer(timer);
                     	sendMessage(lastAutomaticMessage, arduinoChannel);
                     } else if(!getAutomatic()) {
                     	sendMessage(lastAutomaticMessage, arduinoChannel);
                     } else if (lastDay.isPresent() && movement.isPresent()) {
-                    	sendMessage(new SerialCommunication(lastDay.get().getDay(), movement.get().getMovementState(),
-                    			false, 0, true, false), arduinoChannel);
+                    	sendMessage(new SerialCommunication(false, 0), arduinoChannel);
                     } else {
                         try {
                             Thread.sleep(1000);
@@ -84,20 +81,22 @@ public class RunService {
                             var gson = new Gson().fromJson(msg, SerialCommunication.class);
 
                             System.out.println("New Arduino Msg available: " + msg);
-                            var lightOn = new MQTTLight(gson.isLightOn());
+                            
 
                             //this if ignore "null" arduino packet
+                            /* TODO */
+                            var lightOn = new MQTTLight(gson.isLightOn());
                             if(!msg.contains("null")) {
-	                            if(gson.isBtCommand()) {
+	                            if(gson.isFrontendActive()) {
 	                                setAutomatic(false);
 	                                lastAutomaticMessage = gson;
 	                            }
-	                            if(!isBtActive && gson.isBtCommand()) {
+	                            if(!isBtActive && gson.isFrontendActive()) {
 	                            	startTimer(timer);
 	                            	isBtActive = true;
 	                            }
 	                            lightOn.setMsgDate(LocalDateTime.now().toString());
-	                            RoomState.getInstance().getLightStateHistory().add(lightOn);
+	                            RiverMonitoringSystemState.getInstance().getLightStateHistory().add(lightOn);
                             }
                         }
                         Thread.sleep(1000);
@@ -123,7 +122,7 @@ public class RunService {
     	timer.schedule(new TimerTask() {
 		    @Override
 		    public void run() {
-		    	isBtActive = false;
+		    	isFrontendActive = false;
 			    setAutomatic(true);
 		    }
 		}, 10000);

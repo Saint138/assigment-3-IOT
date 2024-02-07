@@ -2,7 +2,6 @@
 #define __SERIALTASK__
 
 #include "Task.h"
-#include <ArduinoJson.h>
 #include "./model/WaterController.h"
 
 extern int valveOpening;

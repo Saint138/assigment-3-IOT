@@ -13,11 +13,11 @@ import io.vertx.ext.web.handler.CorsHandler;
  * get handler for the movement (esp) and light (arduino) histories;
  * post handler to send a new command to Arduino.
  * */
-public class RoomResource extends AbstractVerticle {
+public class RiverResource extends AbstractVerticle {
 
 	private final int port;
 
-	public RoomResource(final int port) {
+	public RiverResource(final int port) {
 		this.port = port;
 	}
 

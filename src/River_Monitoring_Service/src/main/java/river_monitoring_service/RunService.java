@@ -6,9 +6,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.google.gson.Gson;
+import com.fazecast.jSerialComm.SerialPort;
 
 import /* src.main.java. */river_monitoring_service.http.DashboardMessage;
-import /* src.main.java. */river_monitoring_service.http.RoomResource;
+import /* src.main.java. */river_monitoring_service.http.RiverResource;
 import /* src.main.java. */river_monitoring_service.mqtt.MQTTAgent;
 import /* src.main.java. */river_monitoring_service.mqtt.MQTTWaterLevel;
 import /* src.main.java. */river_monitoring_service.mqtt.MQTTFrequency;
@@ -21,6 +22,7 @@ public class RunService {
 
 	// Vars with synchronized method used in multiple threads
 	private static boolean automatic = true;
+    private static boolean dashboard = false;
 	private static boolean isFrontendActive = false;
 	private static SerialCommunication lastAutomaticMessage;
 
@@ -28,7 +30,7 @@ public class RunService {
 
         //deploy http service in order to exchange data with the dashboard
         Vertx vertxHttp = Vertx.vertx();
-        RoomResource service = new RoomResource(3030);
+        RiverResource service = new RiverResource(3030);
         vertxHttp.deployVerticle(service);
 
         //deploy mqtt agent
@@ -36,8 +38,20 @@ public class RunService {
         MQTTAgent agent = new MQTTAgent();
         vertxMqtt.deployVerticle(agent);
 
-        final String portName = "COM3";
-        System.out.println("Start monitoring serial port " + portName + " at 9600 boud rate");
+        SerialPort[] ports = SerialPort.getCommPorts();
+        String portName = null;
+
+        for (SerialPort port : ports) {
+            if (port.getDescriptivePortName().contains("Arduino")) {
+                portName = port.getSystemPortName();
+                break;
+            }
+        }
+
+        if (portName == null) {
+            System.out.println("Arduino port not found.");
+            return;
+        }
 
         Timer timer = new Timer();
 
@@ -48,19 +62,21 @@ public class RunService {
             final Thread sender = new Thread(() -> {
                 while (true) {
 
-                    Optional<MQTTFrequency> lastDay = RiverMonitoringSystemState.getInstance().getLastFrequency();
-                    Optional<MQTTWaterLevel> movement = RiverMonitoringSystemState.getInstance().getLastWaterLevelState();
+                    Optional<MQTTWaterLevel> lastWaterLevel = RiverMonitoringSystemState.getInstance().getLastWaterLevelState();
                     Optional<DashboardMessage> dashboardMsg = RiverMonitoringSystemState.getInstance().getLastDashboardMessage();
                     /* TODO */
                     if (dashboardMsg.isPresent()) {
                     	setAutomatic(false);
-                    	lastAutomaticMessage = new SerialCommunication(false, 0);
+                        setDashboard(true);
+                    	lastAutomaticMessage = new SerialCommunication(false, "qui dentro va messo il numero di dashboardMsg convertito in stringa ", true);
                     	startTimer(timer);
                     	sendMessage(lastAutomaticMessage, arduinoChannel);
-                    } else if(!getAutomatic()) {
-                    	sendMessage(lastAutomaticMessage, arduinoChannel);
-                    } else if (lastDay.isPresent() && movement.isPresent()) {
-                    	sendMessage(new SerialCommunication(false, 0), arduinoChannel);
+                    } else if (lastWaterLevel.isPresent()) {
+                        setDashboard(false);
+                        setAutomatic(true);
+                        lastAutomaticMessage = new SerialCommunication(true, "stringa dello stato in base a waterlevel" , false);
+                        startTimer(timer);
+                        sendMessage(lastAutomaticMessage, arduinoChannel);
                     } else {
                         try {
                             Thread.sleep(1000);
@@ -139,5 +155,13 @@ public class RunService {
 
     public static synchronized void setAutomatic(boolean value) {
     	automatic = value;
+    }
+
+    public static synchronized boolean getDashboard() {
+        return dashboard;
+    }
+
+    public static synchronized void setDashboard(boolean value) {
+    	dashboard = value;
     }
 }

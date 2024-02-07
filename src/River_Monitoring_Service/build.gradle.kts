@@ -46,6 +46,9 @@ dependencies {
 	
 	// https://mvnrepository.com/artifact/io.github.java-native/jssc
 	implementation("io.github.java-native:jssc:2.9.4")
+
+    // https://mvnrepository.com/artifact/com.fazecast/jSerialComm
+    implementation("com.fazecast:jSerialComm:2.10.4")
 }
 
 tasks.test {

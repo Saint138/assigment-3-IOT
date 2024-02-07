@@ -3,12 +3,14 @@ package /* src.main.java. */river_monitoring_service.serial;
 public class SerialCommunication {
 
 	private boolean automatic;
-	private int valveOpening;	
+	private String valveOpening;
+	private boolean dashboard;	
 
-	public SerialCommunication(boolean automatic, int valveOpening) {
+	public SerialCommunication(boolean automatic, String valveOpening, boolean dashboard) {
 		super();
 		this.automatic = automatic;
 		this.valveOpening = valveOpening;
+		this.dashboard = dashboard;
 	}
 
 	public boolean isAutomatic() {
@@ -19,16 +21,24 @@ public class SerialCommunication {
 		this.automatic = automatic;
 	}
 
-	public int getValveOpening() {
+	public boolean isDashboard() {
+		return dashboard;
+	}
+
+	public void setDashboard(boolean dashboard) {
+		this.dashboard = dashboard;
+	}
+
+	public String getValveOpening() {
 		return valveOpening;
 	}
 
-	public void setValveOpening(int valveOpening) {
+	public void setValveOpening(String valveOpening) {
 		this.valveOpening = valveOpening;
 	}
 
 	@Override
 	public String toString() {
-		return "SerialCommunication [automatic =  " + automatic + ", valveOpening = " + valveOpening + "]";
+		return "SerialCommunication [automatic =  " + automatic + ", valveOpening = " + valveOpening + " , dashboard = " + dashboard + "]";
 	}
 }

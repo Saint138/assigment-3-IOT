@@ -31,19 +31,19 @@ public class RiverMonitoringSystemState {
 	}
 
 	public static RiverMonitoringSystemState getInstance() {
-            if (instance == null) {
-                instance = new RiverMonitoringSystemState();
-            }
-            return instance;
-        }
+		if (instance == null) {
+			instance = new RiverMonitoringSystemState();
+		}
+		return instance;
+	}
 
 	public synchronized void addDashboardMessage(final DashboardMessage msg) {
-            this.dashboardMessages.add(msg);
-        }
+		this.dashboardMessages.add(msg);
+	}
 
-        public synchronized Optional<DashboardMessage> getLastDashboardMessage() {
-            return Optional.ofNullable(this.dashboardMessages.poll());
-        }
+	public synchronized Optional<DashboardMessage> getLastDashboardMessage() {
+		return Optional.ofNullable(this.dashboardMessages.poll());
+	}
 
 	public synchronized List<MQTTFrequency> getFrequencyStateHistory() {
 		return this.frequencyStateHistory;
@@ -61,20 +61,20 @@ public class RiverMonitoringSystemState {
 	}
 
 	public synchronized Optional<MQTTWaterLevel> getLastWaterLevelState() {
-           if(waterLevelStateHistory.size() == 0) {
-               return Optional.empty();
-           }
-           return Optional.of(waterLevelStateHistory.get(waterLevelStateHistory.size() - 1));
+		if(waterLevelStateHistory.size() == 0) {
+			return Optional.empty();
+		}
+		return Optional.of(waterLevelStateHistory.get(waterLevelStateHistory.size() - 1));
 	}
 
 	public synchronized Optional<MQTTFrequency> getLastFrequency() {
-            if(frequencyHistory.size() == 0) {
-                return Optional.empty();
-            }
-            return Optional.of(frequencyHistory.get(frequencyHistory.size() - 1));
-        }
+		if(frequencyHistory.size() == 0) {
+			return Optional.empty();
+		}
+		return Optional.of(frequencyHistory.get(frequencyHistory.size() - 1));
+	}
 
-        public synchronized List<MQTTFrequency> getFrequencyHistory() {
-                return this.frequencyHistory;
-        }
+	public synchronized List<MQTTFrequency> getFrequencyHistory() {
+			return this.frequencyHistory;
+	}
 }

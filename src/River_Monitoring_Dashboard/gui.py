@@ -4,15 +4,29 @@ from tkinter import messagebox
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import requests
+import random
+import time
 
 def request_data(url):
+    # Simulazione di dati di test
+    data = []
+    for i in range(10):
+        data.append({
+            'tempo': f'Timestamp {i}',
+            'altezza': random.uniform(0, 100),  # Altezza casuale tra 0 e 100
+            'apertura': random.uniform(0, 100),  # Valore casuale di apertura tra 0 e 100
+            'abilitato': random.choice([True, False])  # Valore casuale di abilitazione
+        })
+    return data
+
+""" def request_data(url):
     try:
         response = requests.get(url)
         response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
         print(f"Errore nella richiesta: {str(e)}")
-        return None
+        return None """
 
 def periodic_request(urlReceive, interval, figure, canvas, servomotorLabel, stateLabel, app, ax, slider):
     data = request_data(urlReceive)
@@ -89,7 +103,7 @@ def main():
     toggle_button.config(width=15, height=2, relief=tk.RIDGE)
     toggle_button.pack(pady=10)
 
-    #periodic_request(urlReceive, interval, figure, canvas, servomotorLabel, stateLabel, app, ax, slider)
+    periodic_request(urlReceive, interval, figure, canvas, servomotorLabel, stateLabel, app, ax, slider)
 
     app.mainloop()
 

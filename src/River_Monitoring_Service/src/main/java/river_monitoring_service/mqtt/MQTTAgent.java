@@ -28,28 +28,28 @@ public class MQTTAgent extends AbstractVerticle {
 
             log("subscribing...");
 
-            //If there is a new message from ESP, save movement and light data into RoomState histories.
+            //If there is a new message from ESP, save waterLevel and frequency data into RoomState histories.
             client.publishHandler(s -> {
                 System.out.println("There are new message in topic: " + s.topicName());
 
-                if (s.topicName().equals(Topics.LIGHT.getName())) {
+                if (s.topicName().equals(Topics.FREQUENCY.getName())) {
                     if (s.payload().toString().contains("{")) {
-                        MQTTLight light = msgToEsp.fromJson(s.payload().toString(), MQTTLight.class);
-                        light.setMsgDate(LocalDateTime.now().toString());
-                        RiverMonitoringSystemState.getInstance().getDayHistory().add(light);
+                        MQTTFrequency frequency = msgToEsp.fromJson(s.payload().toString(), MQTTFrequency.class);
+                        frequency.setMsgDate(LocalDateTime.now().toString());
+                        RiverMonitoringSystemState.getInstance().getFrequencyHistory().add(frequency);
                     }
                 } else {
                     if (s.payload().toString().contains("{")) {
-                        MQTTMovement movement = msgToEsp.fromJson(s.payload().toString(), MQTTMovement.class);
-                        movement.setDateTime(LocalDateTime.now().toString());
-                        RiverMonitoringSystemState.getInstance().getMovementStateHistory().add(movement);
+                        MQTTWaterLevel waterLevel = msgToEsp.fromJson(s.payload().toString(), MQTTWaterLevel.class);
+                        waterLevel.setDateTime(LocalDateTime.now().toString());
+                        RiverMonitoringSystemState.getInstance().getWaterLevelStateHistory().add(waterLevel);
                     }
                 }
 
                 System.out.println("Content(as string) of the message: " + s.payload().toString());
                 System.out.println("QoS: " + s.qosLevel());
 
-            }).subscribe(Map.of(Topics.MOVEMENT.getName(), 2, Topics.LIGHT.getName(), 2));
+            }).subscribe(Map.of(Topics.WATERLEVEL.getName(), 2, Topics.FREQUENCY.getName(), 2));
         });
     }
 
@@ -58,7 +58,7 @@ public class MQTTAgent extends AbstractVerticle {
     }
 
     private enum Topics {
-        MOVEMENT("movement"), LIGHT("light");
+        WATERLEVEL("waterLevel"), FREQUENCY("frequency");
 
         private String name;
 

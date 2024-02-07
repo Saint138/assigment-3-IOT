@@ -160,7 +160,7 @@ void loop() {
   if (now - lastMsgTime > (1000 / frequency)) {
     lastMsgTime = now;
 
-    float waterLevel = functions::getWaterLevel();
+    int waterLevel = functions::getWaterLevel();
 
     /* creating a msg in the buffer */
     snprintf(msg1, MSG_BUFFER_SIZE, "Water Level: %.2f", waterLevel);

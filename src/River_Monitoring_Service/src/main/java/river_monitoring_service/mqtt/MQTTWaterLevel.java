@@ -1,27 +1,27 @@
-package /* src.main.java. */river_monitoring_service.mqtt;
+package river_monitoring_service.mqtt;
 
 import java.time.LocalDateTime;
 
 /**
  * Class that represents the MQTT movement message sent from the ESP.
  * */
-public class MQTTMovement {
+public class MQTTWaterLevel {
 
     private String dateTime;
-    private boolean movement;
+    private int waterLevel;
 
-    public MQTTMovement(final boolean movement) {
+    public MQTTWaterLevel(final int waterLevel) {
         super();
         this.dateTime = LocalDateTime.now().toString();
-        this.movement = movement;
+        this.waterLevel = waterLevel;
     }
 
-    public boolean getMovementState() {
-        return movement;
+    public int getWaterLevelState() {
+        return waterLevel;
     }
 
-    public void setMovementState(final boolean movement) {
-        this.movement = movement;
+    public void setWaterLevelState(final int waterLevel) {
+        this.waterLevel = waterLevel;
     }
 
     public String getDateTime() {

@@ -1,13 +1,13 @@
 #include "functions.h"
 
 // Inizializzazione della variabile statica
-float functions::waterLevel = 0.0;
+int functions::waterLevel = 0.0;
 
 void functions::waterDetectionTask(void* parameter) {
     Sonar* sonar = new Sonar(TRIG_PIN, ECHO_PIN, MAXTIME);
     for (;;) {
 
-        float currentWaterLevel = sonar->getDistance();
+        int currentWaterLevel = sonar->toInt();
 
         waterLevel = currentWaterLevel;
     }

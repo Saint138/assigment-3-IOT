@@ -7,8 +7,8 @@ import java.util.Optional;
 import java.util.Queue;
 
 import /* src.main.java. */river_monitoring_service.http.DashboardMessage;
-import /* src.main.java. */river_monitoring_service.mqtt.MQTTMovement;
-import /* src.main.java. */river_monitoring_service.mqtt.MQTTLight;
+import /* src.main.java. */river_monitoring_service.mqtt.MQTTWaterLevel;
+import /* src.main.java. */river_monitoring_service.mqtt.MQTTFrequency;
 
 /**
  * Class to keep ESP messages history (movement and day), dashboard messages (to be send to Arduino)
@@ -18,16 +18,16 @@ public class RiverMonitoringSystemState {
 
 	private static RiverMonitoringSystemState instance = null;
 
-	private List<MQTTLight> dayHistory;
-	private List<MQTTLight> lightStateHistory;
-	private List<MQTTMovement> movementStateHistory;
+	private List<MQTTFrequency> frequencyHistory;
+	private List<MQTTFrequency> frequencyStateHistory;
+	private List<MQTTWaterLevel> waterLevelStateHistory;
 	private Queue<DashboardMessage> dashboardMessages;
 
 	private RiverMonitoringSystemState() {
-		this.dayHistory = new ArrayList<>();
-		this.movementStateHistory = new ArrayList<>();
+		this.frequencyHistory = new ArrayList<>();
+		this.waterLevelStateHistory = new ArrayList<>();
 		this.dashboardMessages = new ArrayDeque<>();
-		this.lightStateHistory = new ArrayList<>();
+		this.frequencyStateHistory = new ArrayList<>();
 	}
 
 	public static RiverMonitoringSystemState getInstance() {
@@ -45,36 +45,36 @@ public class RiverMonitoringSystemState {
             return Optional.ofNullable(this.dashboardMessages.poll());
         }
 
-	public synchronized List<MQTTLight> getLightStateHistory() {
-		return this.lightStateHistory;
+	public synchronized List<MQTTFrequency> getFrequencyStateHistory() {
+		return this.frequencyStateHistory;
 	}
 
-	public synchronized Optional<MQTTLight> getLastLightState() {
-	    if(this.lightStateHistory.size() == 0) {
+	public synchronized Optional<MQTTFrequency> getLastFrequencyState() {
+	    if(this.frequencyStateHistory.size() == 0) {
 	        return Optional.empty();
 	    }
-	    return Optional.of(this.lightStateHistory.get(this.lightStateHistory.size() - 1));
+	    return Optional.of(this.frequencyStateHistory.get(this.frequencyStateHistory.size() - 1));
 	}
 
-	public synchronized List<MQTTMovement> getMovementStateHistory() {
-		return movementStateHistory;
+	public synchronized List<MQTTWaterLevel> getWaterLevelStateHistory() {
+		return waterLevelStateHistory;
 	}
 
-	public synchronized Optional<MQTTMovement> getLastMovementState() {
-           if(movementStateHistory.size() == 0) {
+	public synchronized Optional<MQTTWaterLevel> getLastWaterLevelState() {
+           if(waterLevelStateHistory.size() == 0) {
                return Optional.empty();
            }
-           return Optional.of(movementStateHistory.get(movementStateHistory.size() - 1));
+           return Optional.of(waterLevelStateHistory.get(waterLevelStateHistory.size() - 1));
 	}
 
-	public synchronized Optional<MQTTLight> getLastDay() {
-            if(dayHistory.size() == 0) {
+	public synchronized Optional<MQTTFrequency> getLastFrequency() {
+            if(frequencyHistory.size() == 0) {
                 return Optional.empty();
             }
-            return Optional.of(dayHistory.get(dayHistory.size() - 1));
+            return Optional.of(frequencyHistory.get(frequencyHistory.size() - 1));
         }
 
-        public synchronized List<MQTTLight> getDayHistory() {
-                return this.dayHistory;
+        public synchronized List<MQTTFrequency> getFrequencyHistory() {
+                return this.frequencyHistory;
         }
 }

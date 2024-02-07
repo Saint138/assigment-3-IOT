@@ -10,8 +10,8 @@ import com.google.gson.Gson;
 import /* src.main.java. */river_monitoring_service.http.DashboardMessage;
 import /* src.main.java. */river_monitoring_service.http.RoomResource;
 import /* src.main.java. */river_monitoring_service.mqtt.MQTTAgent;
-import /* src.main.java. */river_monitoring_service.mqtt.MQTTMovement;
-import /* src.main.java. */river_monitoring_service.mqtt.MQTTLight;
+import /* src.main.java. */river_monitoring_service.mqtt.MQTTWaterLevel;
+import /* src.main.java. */river_monitoring_service.mqtt.MQTTFrequency;
 import /* src.main.java. */river_monitoring_service.serial.CommChannel;
 import /* src.main.java. */river_monitoring_service.serial.SerialCommChannel;
 import /* src.main.java. */river_monitoring_service.serial.SerialCommunication;
@@ -48,8 +48,8 @@ public class RunService {
             final Thread sender = new Thread(() -> {
                 while (true) {
 
-                    Optional<MQTTLight> lastDay = RiverMonitoringSystemState.getInstance().getLastDay();
-                    Optional<MQTTMovement> movement = RiverMonitoringSystemState.getInstance().getLastMovementState();
+                    Optional<MQTTFrequency> lastDay = RiverMonitoringSystemState.getInstance().getLastFrequency();
+                    Optional<MQTTWaterLevel> movement = RiverMonitoringSystemState.getInstance().getLastWaterLevelState();
                     Optional<DashboardMessage> dashboardMsg = RiverMonitoringSystemState.getInstance().getLastDashboardMessage();
                     /* TODO */
                     if (dashboardMsg.isPresent()) {
@@ -85,18 +85,14 @@ public class RunService {
 
                             //this if ignore "null" arduino packet
                             /* TODO */
-                            var lightOn = new MQTTLight(gson.isLightOn());
+                            var lightOn = new MQTTFrequency(gson.isLightOn());
                             if(!msg.contains("null")) {
 	                            if(gson.isFrontendActive()) {
 	                                setAutomatic(false);
 	                                lastAutomaticMessage = gson;
 	                            }
-	                            if(!isBtActive && gson.isFrontendActive()) {
-	                            	startTimer(timer);
-	                            	isBtActive = true;
-	                            }
 	                            lightOn.setMsgDate(LocalDateTime.now().toString());
-	                            RiverMonitoringSystemState.getInstance().getLightStateHistory().add(lightOn);
+	                            RiverMonitoringSystemState.getInstance().getFrequencyStateHistory().add(lightOn);
                             }
                         }
                         Thread.sleep(1000);

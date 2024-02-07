@@ -31,3 +31,7 @@ float Sonar::getDistance(){
         return d;  
     }
 }
+
+int Sonar::toInt(){
+    return (int)getDistance();
+}

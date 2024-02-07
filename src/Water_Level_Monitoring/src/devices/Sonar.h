@@ -11,6 +11,7 @@ public:
   Sonar(int echoPin, int trigPin, long timeOut);
   float getDistance();
   void setTemperature(float temp);  
+  int toInt();
 
 private:
     const float vs = 331.5 + 0.6*20;

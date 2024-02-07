@@ -1,39 +1,39 @@
-package /* src.main.java. */river_monitoring_service.mqtt;
+package river_monitoring_service.mqtt;
 
 import java.time.LocalDateTime;
 
 /**
  * Class that represents the MQTT light message sent from the ESP.
  * */
-public class MQTTLight {
+public class MQTTFrequency {
 
 	private String dateTime;
-	private boolean day;
+	private int frequency;
 
-	public MQTTLight(final boolean day) {
+	public MQTTFrequency(final int frequency) {
 		super();
 		this.dateTime = LocalDateTime.now().toString();
-		this.day = day;
+		this.frequency = frequency;
 	}
 
 	public String getMsgDate() {
 		return this.dateTime;
 	}
 
-	public boolean getDay() {
-		return day;
+	public int getFrequency() {
+		return frequency;
 	}
 
 	public void setMsgDate(final String dateTime) {
 		this.dateTime = dateTime;
 	}
 
-	public void setDay(boolean day) {
-		this.day = day;
+	public void setFrequency(int frequency) {
+		this.frequency = frequency;
 	}
 
 	@Override
 	public String toString() {
-		return "MQTTMsg [msgDate=" + this.dateTime + ", day=" + this.day + "]";
+		return "MQTTMsg [msgDate=" + this.dateTime + ", frequency=" + this.frequency + "]";
 	}
 }

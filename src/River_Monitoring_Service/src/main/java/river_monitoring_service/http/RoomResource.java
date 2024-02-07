@@ -41,11 +41,11 @@ public class RoomResource extends AbstractVerticle {
 	 * */
 	private void handleGetResource(final RoutingContext routingContext) {
 		JsonObject res = new JsonObject();
-		res.put("light", RiverMonitoringSystemState.getInstance().getLightStateHistory().stream()
-		        .map(msg -> new ResponseData(msg.getMsgDate(), msg.getDay()))
+		res.put("light", RiverMonitoringSystemState.getInstance().getFrequencyStateHistory().stream()
+		        .map(msg -> new ResponseData(msg.getMsgDate(), msg.getFrequency()))
 		        .toList());
-		res.put("movement", RiverMonitoringSystemState.getInstance().getMovementStateHistory().stream()
-		        .map(msg -> new ResponseData(msg.getDateTime(), msg.getMovementState()))
+		res.put("movement", RiverMonitoringSystemState.getInstance().getWaterLevelStateHistory().stream()
+		        .map(msg -> new ResponseData(msg.getDateTime(), msg.getWaterLevelState()))
 		        .toList());
 
 		routingContext.response()
@@ -67,7 +67,7 @@ public class RoomResource extends AbstractVerticle {
                 .end(new JsonObject().encodePrettily()); */
 		routingContext.request().bodyHandler(bodyHandler -> {
 			var body = bodyHandler.toJsonObject();
-			boolean clicked = Boolean.parseBoolean(body.getString("clicked"));
+			boolean automatic = Boolean.parseBoolean(body.getString("automatic"));
 			int valveOpening = Integer.parseInt(body.getString("valveOpening"));
 		
 			// Esegui le operazioni necessarie con i dati ricevuti dal client
@@ -90,9 +90,9 @@ public class RoomResource extends AbstractVerticle {
 	private final class ResponseData {
 
             private String date;
-            private boolean value;
+            private int value;
 
-	    public ResponseData(final String date, final boolean value) {
+	    public ResponseData(final String date, final int value) {
 	        this.date = date;
 	        this.value = value;
 	    }
@@ -103,7 +103,7 @@ public class RoomResource extends AbstractVerticle {
 	    }
 
 	    @SuppressWarnings("unused")
-            public boolean isValue() {
+            public int isValue() {
 	    	return this.value;
 	    }
 
@@ -113,7 +113,7 @@ public class RoomResource extends AbstractVerticle {
             }
 
             @SuppressWarnings("unused")
-            public void setValue(final boolean value) {
+            public void setValue(final int value) {
                 this.value = value;
             }
 	}

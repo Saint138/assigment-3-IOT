@@ -9,6 +9,6 @@
 class functions {
     public:
         static void waterDetectionTask(void* parameter);
-        static float getWaterLevel();
-        static float waterLevel;
+        static int getWaterLevel();
+        static int waterLevel;
 };

@@ -17,7 +17,11 @@ void ValveTask::tick(){
   if(automatic) {
     valvestate = AUTO;
   } else {
-    valvestate = MANUAL;
+    if(dashboard) {
+      valvestate = DASHBOARD;
+    } else {
+      valvestate = MANUAL;
+    }
   }
   
   switch (valvestate){
@@ -25,47 +29,51 @@ void ValveTask::tick(){
       /*switch con casi aperture*/
       switch(waterController->getState()){
         case NORMAL:
-          servo->setPosition(setAngle(25)); /*da aggiornare, valore out potenziometro*/
-          lcd->clearDisplay();
-          lcd->video(25, "AUTOMATIC");
           valveOpening = 25;
+          servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out potenziometro*/
+          lcd->clearDisplay();
+          lcd->video(valveOpening, "AUTOMATIC");
         break;
 
         case PREALLARMTOOHIGH:
-          servo->setPosition(setAngle(25)); /*da aggiornare, valore out potenziometro*/
-          lcd->clearDisplay();
-          lcd->video(25, "AUTOMATIC");
           valveOpening = 25;
+          servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out potenziometro*/
+          lcd->clearDisplay();
+          lcd->video(valveOpening, "AUTOMATIC");
         break;
 
         case ALLARMTOOHIGH:
-          servo->setPosition(setAngle(50)); /*da aggiornare, valore out potenziometro*/
-          lcd->clearDisplay();
-          lcd->video(50, "AUTOMATIC");
           valveOpening = 50;
+          servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out potenziometro*/
+          lcd->clearDisplay();
+          lcd->video(valveOpening, "AUTOMATIC");
         break;
 
         case ALLARMTOOHIGHCRITIC:
-          servo->setPosition(setAngle(100)); /*da aggiornare, valore out potenziometro*/
-          lcd->clearDisplay();
-          lcd->video(100, "AUTOMATIC");
           valveOpening = 100;
+          servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out potenziometro*/
+          lcd->clearDisplay();
+          lcd->video(valveOpening, "AUTOMATIC");
         break;
 
         case ALLARMTOOLOW:
-          servo->setPosition(setAngle(0)); /*da aggiornare, valore out potenziometro*/
-          lcd->clearDisplay();
-          lcd->video(0, "AUTOMATIC");
           valveOpening = 0;
+          servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out potenziometro*/
+          lcd->clearDisplay();
+          lcd->video(valveOpening, "AUTOMATIC");
         break;
 
       }
     break;
 
     case MANUAL:
-      int val = map(potentiometer->getValue(), 0, 1023, 0, 100);
-      valveOpening = setAngle(val);
-      servo->setPosition(valveOpening); /*da aggiornare, valore out potenziometro*/
+      int valveOpening = map(potentiometer->getValue(), 0, 1023, 0, 100);
+      servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out potenziometro*/
+      lcd->video(valveOpening, "MANUAL");
+    break;
+
+    case DASHBOARD:
+      servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out dashboard*/
       lcd->video(valveOpening, "MANUAL");
     break;
   }

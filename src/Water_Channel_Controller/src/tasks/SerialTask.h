@@ -7,6 +7,7 @@
 
 extern int valveOpening;
 extern bool automatic;
+extern bool dashboard;
 
 class SerialTask: public Task {
 public:

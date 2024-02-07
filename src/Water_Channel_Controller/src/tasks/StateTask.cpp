@@ -3,6 +3,7 @@
 StateTask::StateTask(WaterController* waterController) {
   this->waterController = waterController;
   automatic = true;
+  dashboard = false;
 }
 
 void StateTask::tick() {
@@ -12,6 +13,7 @@ void StateTask::tick() {
         }else{
             automatic = true;
         }
+        dashboard = false;
     }
-    waterController->LCDwrite(automatic ? "Automatic" : "Manual");
+    //waterController->LCDwrite(automatic ? "Automatic" : "Manual");
 }

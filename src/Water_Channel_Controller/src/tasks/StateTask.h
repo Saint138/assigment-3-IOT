@@ -5,6 +5,7 @@
 #include "../model/WaterController.h"
 
 bool automatic;
+bool dashboard;
 extern int valveOpening;
 
 class StateTask: public Task {

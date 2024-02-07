@@ -10,31 +10,33 @@ void SerialTask::tick() {
 
     if(msg == stateAsString(NORMAL)) {
         automatic = true;
+        dashboard = false;
         waterController->setNormal();
     } else if(msg == stateAsString(ALLARMTOOHIGH)) {
         automatic = true;
+        dashboard = false;
         waterController->setAllarmTooHigh();
     } else if(msg == stateAsString(ALLARMTOOHIGHCRITIC)) {
         automatic = true;
+        dashboard = false;
         waterController->setAllarmTooHighCritic();
     } else if(msg == stateAsString(PREALLARMTOOHIGH)) {
         automatic = true;
+        dashboard = false;
         waterController->setPreAllarmTooHigh();
     } else if(msg == stateAsString(ALLARMTOOLOW)) {
         automatic = true;
+        dashboard = false;
         waterController->setAllarmTooLow();
     } else {
         automatic = false;
+        dashboard = true;
         valveOpening = msg.toInt();
     }
 
-    StaticJsonDocument<112> data;
-
-    data["automatic"] = automatic;
-    data["valveOpening"] = valveOpening;
-
-    serializeJson(data, Serial);
-    Serial.println("");
+    Serial.println("AUTOMATIC: " + automatic);
+    Serial.println("DASHBOARD: " + dashboard);
+    Serial.println("VALVE OPENING: " + valveOpening);
   }
 }
 

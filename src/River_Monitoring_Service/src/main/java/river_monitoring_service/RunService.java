@@ -1,11 +1,6 @@
 package /* src.main.java. */river_monitoring_service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import com.google.gson.Gson;
 import com.fazecast.jSerialComm.SerialPort;
 
 import /* src.main.java. */river_monitoring_service.http.DashboardMessage;
@@ -61,7 +56,7 @@ public class RunService {
 
                     Optional<MQTTWaterLevel> lastWaterLevel = RiverMonitoringSystemState.getInstance().getLastWaterLevelState();
                     Optional<DashboardMessage> dashboardMsg = RiverMonitoringSystemState.getInstance().getLastDashboardMessage();
-                    /* TODO */
+
                     if (dashboardMsg.isPresent()) {
                     	setAutomatic(false);
                         setDashboard(true);

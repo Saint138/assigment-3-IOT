@@ -1,6 +1,6 @@
-package /* src.main.java. */river_monitoring_service.http;
+package river_monitoring_service.http;
 
-import /* src.main.java. */river_monitoring_service.RiverMonitoringSystemState;
+import river_monitoring_service.RiverMonitoringSystemState;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -9,8 +9,8 @@ import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 
 /**
- * Class for the http service, it contains the handlers for the room resource:
- * get handler for the movement (esp) and light (arduino) histories;
+ * Class for the http service, it contains the handlers for the river resource:
+ * get handler for the waterlevel (esp) histories;
  * post handler to send a new command to Arduino.
  * */
 public class RiverResource extends AbstractVerticle {
@@ -26,8 +26,8 @@ public class RiverResource extends AbstractVerticle {
 		Router router = Router.router(vertx);
 		router.route().handler(CorsHandler.create("http://localhost"));
 		router.route().handler(BodyHandler.create());
-		router.get("/api/room").handler(this::handleGetResource);
-		router.post("/api/room").handler(this::handlePostResource);
+		router.get("/api/river").handler(this::handleGetResource);
+		router.post("/api/river").handler(this::handlePostResource);
 		vertx
 			.createHttpServer()
 			.requestHandler(router)
@@ -45,7 +45,7 @@ public class RiverResource extends AbstractVerticle {
 		        .map(msg -> new ResponseData(msg.getMsgDate(), msg.getFrequency()))
 		        .toList());
 		res.put("movement", RiverMonitoringSystemState.getInstance().getWaterLevelStateHistory().stream()
-		        .map(msg -> new ResponseData(msg.getDateTime(), msg.getWaterLevelState()))
+		        .map(msg -> new ResponseData(msg.getDateTime(), msg.getWaterLevel()))
 		        .toList());
 
 		routingContext.response()

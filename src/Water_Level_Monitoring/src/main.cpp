@@ -15,11 +15,11 @@
 char str[56];
 
 /* Take global variables */
-int frequency;
+int frequency = 0;
 
 /* wifi network info */
-const char* ssid = "ap";
-const char* password = "admin222";
+const char* ssid = "Redmi Note 8 Pro";
+const char* password = "GiacomoFoschi";
 
 /* MQTT server address */
 const char* mqtt_server = "broker.mqtt-dashboard.com";
@@ -157,13 +157,13 @@ void loop() {
   unsigned long now = millis();
   StaticJsonDocument<56> waterLevelJson;
 
-  if (now - lastMsgTime > (1000 / frequency)) {
+  if (now - lastMsgTime > (frequency)) {
     lastMsgTime = now;
 
     int waterLevel = functions::getWaterLevel();
 
     /* creating a msg in the buffer */
-    snprintf(msg1, MSG_BUFFER_SIZE, "Water Level: %.2f", waterLevel);
+    snprintf(msg1, MSG_BUFFER_SIZE, "Water Level: %d", waterLevel);
 
     Serial.println(String("Publishing message: ") + msg1);
 

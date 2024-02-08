@@ -24,11 +24,11 @@ float Sonar::getDistance(){
     
     float tUS = pulseIn(echoPin, HIGH, timeOut);
     if (tUS == 0) {
-        return 1;
+        return -1;
     } else {
         float t = tUS / 1000.0 / 1000.0 / 2;
         float d = t*getSoundSpeed();
-        return d;  
+        return d*100;  
     }
 }
 

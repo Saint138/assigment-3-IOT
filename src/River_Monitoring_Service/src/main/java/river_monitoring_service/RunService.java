@@ -12,7 +12,6 @@ import /* src.main.java. */river_monitoring_service.http.DashboardMessage;
 import /* src.main.java. */river_monitoring_service.http.RiverResource;
 import /* src.main.java. */river_monitoring_service.mqtt.MQTTAgent;
 import /* src.main.java. */river_monitoring_service.mqtt.MQTTWaterLevel;
-import /* src.main.java. */river_monitoring_service.mqtt.MQTTFrequency;
 import /* src.main.java. */river_monitoring_service.serial.CommChannel;
 import /* src.main.java. */river_monitoring_service.serial.SerialCommChannel;
 import /* src.main.java. */river_monitoring_service.serial.SerialCommunication;
@@ -22,9 +21,9 @@ public class RunService {
 
 	// Vars with synchronized method used in multiple threads
 	private static boolean automatic = true;
+    private static int valveOpening = 25;
     private static boolean dashboard = false;
-	private static boolean isFrontendActive = false;
-	private static SerialCommunication lastAutomaticMessage;
+	private static SerialCommunication arduinoMsg;
 
     public static void main(String[] args) {
 
@@ -53,8 +52,6 @@ public class RunService {
             return;
         }
 
-        Timer timer = new Timer();
-
         try {
             final CommChannel arduinoChannel = new SerialCommChannel(portName, 9600);
 
@@ -68,15 +65,13 @@ public class RunService {
                     if (dashboardMsg.isPresent()) {
                     	setAutomatic(false);
                         setDashboard(true);
-                    	lastAutomaticMessage = new SerialCommunication(false, "qui dentro va messo il numero di dashboardMsg convertito in stringa ", true);
-                    	startTimer(timer);
-                    	sendMessage(lastAutomaticMessage, arduinoChannel);
+                    	arduinoMsg = new SerialCommunication(false, dashboardMsg.toString(), true);
+                    	sendMessage(arduinoMsg, arduinoChannel);
                     } else if (lastWaterLevel.isPresent()) {
                         setDashboard(false);
                         setAutomatic(true);
-                        lastAutomaticMessage = new SerialCommunication(true, "stringa dello stato in base a waterlevel" , false);
-                        startTimer(timer);
-                        sendMessage(lastAutomaticMessage, arduinoChannel);
+                        arduinoMsg = new SerialCommunication(true, getRiverState(valveOpening) , false);
+                        sendMessage(arduinoMsg, arduinoChannel);
                     } else {
                         try {
                             Thread.sleep(1000);
@@ -94,21 +89,24 @@ public class RunService {
                         if (arduinoChannel.isMsgAvailable()) {
                             String msg;
                             msg = arduinoChannel.receiveMsg();
-                            var gson = new Gson().fromJson(msg, SerialCommunication.class);
 
                             System.out.println("New Arduino Msg available: " + msg);
-                            
 
                             //this if ignore "null" arduino packet
-                            /* TODO */
-                            var lightOn = new MQTTFrequency(gson.isLightOn());
                             if(!msg.contains("null")) {
-	                            if(gson.isFrontendActive()) {
-	                                setAutomatic(false);
-	                                lastAutomaticMessage = gson;
+	                            if(msg.contains("DASHBOARD: false")) {
+	                                setDashboard(false);
 	                            }
-	                            lightOn.setMsgDate(LocalDateTime.now().toString());
-	                            RiverMonitoringSystemState.getInstance().getFrequencyStateHistory().add(lightOn);
+                                if(msg.contains("AUTOMATIC: true")) {
+                                    setAutomatic(true);
+                                } else {
+                                    setAutomatic(false);
+                                }
+                                if(msg.contains("VALVE OPENING: ")) {
+                                    String numberStr = msg.substring(msg.indexOf("VALVE OPENING: ") + 15);
+                                    numberStr = numberStr.replaceAll("[^0-9].*", "");
+                                    valveOpening = Integer.parseInt(numberStr);
+                                }
                             }
                         }
                         Thread.sleep(1000);
@@ -125,27 +123,28 @@ public class RunService {
         }
     }
 
-    /**
-     * it schedule a timer to limit manual command,
-     * it returns automatic after 10 seconds
-     * @param timer
-     */
-    private static void startTimer(final Timer timer) {
-    	timer.schedule(new TimerTask() {
-		    @Override
-		    public void run() {
-		    	isFrontendActive = false;
-			    setAutomatic(true);
-		    }
-		}, 10000);
-	}
-
 	private static void sendMessage(final SerialCommunication packet, final CommChannel channel) {
         try {
-            channel.sendMsg(new Gson().toJson(packet));
+            channel.sendMsg(packet.toString());
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static String getRiverState(int waterLevel) {
+        if (waterLevel < WL.WL4.getValue()) {
+            return "ALARM-TOO-HIGH-CRITIC";
+        } else if (waterLevel < WL.WL3.getValue()) {
+            return "ALARM-TOO-HIGH";
+        } else if (waterLevel < WL.WL2.getValue()) {
+            return "PRE-ALARM-TOO-HIGH";
+        } else if (waterLevel <= WL.WL1.getValue()) {
+            return "NORMAL";
+        } else if (waterLevel > WL.WL1.getValue()) {
+            return "ALARM-TOO-LOW";
+        } else {
+            return "ERROR on RunService";
         }
     }
 
@@ -163,5 +162,9 @@ public class RunService {
 
     public static synchronized void setDashboard(boolean value) {
     	dashboard = value;
+    }
+
+    public static synchronized int getValveOpening() {
+        return valveOpening;
     }
 }

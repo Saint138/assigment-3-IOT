@@ -5,16 +5,10 @@ package /* src.main.java. */river_monitoring_service.http;
  * */
 public class DashboardMessage {
 
-    private final boolean clicked;
     private final int valveOpening;
 
-    public DashboardMessage(final boolean clicked, final int valveOpening) {
-        this.clicked = clicked;
+    public DashboardMessage(final int valveOpening) {
         this.valveOpening = valveOpening;
-    }
-
-	public boolean isClicked() {
-        return clicked;
     }
 
     public int getValveOpening() {
@@ -23,6 +17,6 @@ public class DashboardMessage {
 
     @Override
     public String toString() {
-    	return "DashboardMessage [clicked=" + clicked + ", valveOpening=" + valveOpening + "]";
+    	return String.valueOf(valveOpening);
     }
 }

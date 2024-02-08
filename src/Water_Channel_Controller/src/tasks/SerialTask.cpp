@@ -34,9 +34,7 @@ void SerialTask::tick() {
         valveOpening = msg.toInt();
     }
 
-    Serial.println("AUTOMATIC: " + automatic);
-    Serial.println("DASHBOARD: " + dashboard);
-    Serial.println("VALVE OPENING: " + valveOpening);
+    Serial.println("AUTOMATIC: " + automatic + ", DASHBOARD: " + dashboard + ", VALVE OPENING: " + valveOpening);
   }
 }
 

@@ -38,8 +38,10 @@ void SerialTask::tick() {
             valveOpening = msg.toInt();
         }
 
-        Serial.println("AUTOMATIC: " + String(automatic ? "true" : "false") + ", DASHBOARD: " + String(dashboard ? "true" : "false") + ", STATE: " + waterController->stateAsString());
+        Serial.println(waterController->stateAsString());
     }
+
+    Serial.println("AUTOMATIC: " + String(automatic ? "true" : "false") + ", DASHBOARD: " + String(dashboard ? "true" : "false") + ", STATE: " + waterController->stateAsString());
 }
 
 bool SerialTask::isMsgAvailable() {
@@ -65,16 +67,16 @@ String SerialTask::stateAsString(State currentState) {
             msg = "NORMAL";
             break;
         case ALLARMTOOHIGH:
-            msg = "ALLARMTOOHIGH";
+            msg = "ALLARM-TOO-HIGH";
             break;
         case ALLARMTOOHIGHCRITIC:
-            msg = "ALLARMTOOHIGHCRITIC";
+            msg = "ALLARM-TOO-HIGH-CRITIC";
             break;
         case PREALLARMTOOHIGH:
-            msg = "PREALLARMTOOHIGH";
+            msg = "PRE-ALLARM-TOO-HIGH";
             break;
         case ALLARMTOOLOW:
-            msg = "ALLARMTOOLOW";
+            msg = "ALLARM-TOO-LOW";
             break;
     }
     return msg;

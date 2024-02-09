@@ -29,7 +29,7 @@ class WaterController {
     
         bool isButtonClicked();
 
-        void LCDwrite(String text);
+        void LCDwrite(int valve, String text);
 
         void ServoMotorOn();
         void ServoMotorOff();

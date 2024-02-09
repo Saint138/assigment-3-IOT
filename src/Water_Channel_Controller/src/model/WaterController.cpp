@@ -1,6 +1,5 @@
 #include "WaterController.h"
 
-
 WaterController::WaterController(Button* button, ServoMotor* servoMotor, LCD* lcd) {
     this->button = button;
     this->servoMotor = servoMotor;
@@ -70,10 +69,9 @@ bool WaterController::isButtonClicked(){
     return button->isClicked();
 }
 
-void WaterController::LCDwrite(String msg){
+void WaterController::LCDwrite(int valve, String msg){
     lcd->clearDisplay();
-    lcd->setCursorDisplay(0, 0);
-    lcd->printText(msg);
+    lcd->video(valve, msg);
 }
 
 void WaterController::ServoMotorOn(){

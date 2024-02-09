@@ -24,17 +24,17 @@ void setup() {
   potentiometer = new Potentiometer(POT_PIN);
   waterController = new WaterController(button, servoMotor, lcd);
 
-  Task* valveTask = new ValveTask(servoMotor, waterController, potentiometer, lcd);
+  Task* valveTask = new ValveTask(waterController, potentiometer);
   Task* stateTask = new StateTask(waterController);
   Task* serialTask = new SerialTask(waterController);
 
-  valveTask->init(200);
-  stateTask->init(200);
-  serialTask->init(200);
+  stateTask->init(150);
+  valveTask->init(150);
+  serialTask->init(150);
 
-  sched.addTask(valveTask);
-  sched.addTask(stateTask);
   sched.addTask(serialTask);
+  sched.addTask(stateTask);
+  sched.addTask(valveTask);
 }
 
 void loop() {

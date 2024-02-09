@@ -1,13 +1,11 @@
 #include "ValveTask.h"
 #include "StateTask.h"
 
-int valveOpening = 25;
+int valveOpening;
 
-ValveTask::ValveTask(ServoMotor* servoMotor, WaterController* waterController, Potentiometer* potentiometer, LCD* lcd) {
-  this->servo = servoMotor;
+ValveTask::ValveTask(WaterController* waterController, Potentiometer* potentiometer) {
   this->waterController = waterController;
   this->potentiometer = potentiometer;
-  this->lcd = lcd;
 }
   
 void ValveTask::init(int period){
@@ -29,13 +27,13 @@ void ValveTask::tick(){
   switch (valvestate){
     case MANUAL:
       valveOpening = map(potentiometer->getValue(), 0, 1023, 0, 100);
-      servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out potenziometro*/
-      lcd->video(valveOpening, "MANUAL");
+      waterController->MotorPosition(setAngle(valveOpening));
+      waterController->LCDwrite(valveOpening, "MANUAL");
     break;
 
     case DASHBOARD:
-      servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out dashboard*/
-      lcd->video(valveOpening, "MANUAL");
+      waterController->MotorPosition(setAngle(valveOpening));
+      waterController->LCDwrite(valveOpening, "DASHBOARD");
     break;
 
     case AUTO:
@@ -43,40 +41,36 @@ void ValveTask::tick(){
       switch(waterController->getState()){
         case NORMAL:
           valveOpening = 25;
-          servo->setPosition(setAngle(valveOpening));
-          lcd->clearDisplay();
-          lcd->video(valveOpening, "AUTOMATIC");
+          waterController->MotorPosition(setAngle(valveOpening));
+          waterController->LCDwrite(valveOpening, "AUTOMATIC");
         break;
 
         case PREALLARMTOOHIGH:
           valveOpening = 25;
-          servo->setPosition(setAngle(valveOpening));
-          lcd->clearDisplay();
-          lcd->video(valveOpening, "AUTOMATIC");
+          waterController->MotorPosition(setAngle(valveOpening));
+          waterController->LCDwrite(valveOpening, "AUTOMATIC");
         break;
 
         case ALLARMTOOHIGH:
           valveOpening = 50;
-          servo->setPosition(setAngle(valveOpening));
-          lcd->clearDisplay();
-          lcd->video(valveOpening, "AUTOMATIC");
+          waterController->MotorPosition(setAngle(valveOpening));
+          waterController->LCDwrite(valveOpening, "AUTOMATIC");
         break;
 
         case ALLARMTOOHIGHCRITIC:
           valveOpening = 100;
-          servo->setPosition(setAngle(valveOpening));
-          lcd->clearDisplay();
-          lcd->video(valveOpening, "AUTOMATIC");
+          waterController->MotorPosition(setAngle(valveOpening));
+          waterController->LCDwrite(valveOpening, "AUTOMATIC");
         break;
 
         case ALLARMTOOLOW:
           valveOpening = 0;
-          servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out potenziometro*/
-          lcd->clearDisplay();
-          lcd->video(valveOpening, "AUTOMATIC");
+          waterController->MotorPosition(setAngle(valveOpening));
+          waterController->LCDwrite(valveOpening, "AUTOMATIC");
           break;
 
       }
+    Serial.println("stato cambiato:" + waterController->stateAsString());
     break;
   }
 }

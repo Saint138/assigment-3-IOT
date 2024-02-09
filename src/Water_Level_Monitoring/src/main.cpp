@@ -11,7 +11,6 @@
 #define MSG_BUFFER_SIZE 50
 #define MAX_WIFI_CONNECT_ATTEMPTS 20  // Numero massimo di tentativi di connessione WiFi
 
-
 char str[56];
 
 /* Take global variables */
@@ -37,10 +36,9 @@ Led* greenLed;
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-
 unsigned long lastMsgTime = 0;
 char msg1[MSG_BUFFER_SIZE];
- 
+
 TaskHandle_t Task1;
 
 void ledHandler(bool connectionStatus, Led* redLed, Led* greenLed) {
@@ -52,13 +50,6 @@ void ledHandler(bool connectionStatus, Led* redLed, Led* greenLed) {
     redLed->switchOn();
   }
 }
-
-void handleWifiFailure() {
-  Serial.println("Failed to connect to WiFi. Retrying in 5 seconds...");
-  delay(5000);  // Attendi 30 secondi prima di ritentare la connessione
-  setup_wifi();  // Ritenta la connessione WiFi
-}
-
 
 void setup_wifi() {
   Serial.println("Connecting to WiFi");
@@ -83,12 +74,14 @@ void setup_wifi() {
     Serial.println("");
     Serial.println("Failed to connect to WiFi");
     ledHandler(false, redLed, greenLed);
-    handleWifiFailure();
   }
 }
 
-
-/* MQTT subscribing callback */
+void handleWifiFailure() {
+  Serial.println("Failed to connect to WiFi. Retrying in 5 seconds...");
+  delay(5000);  // Attendi 5 secondi prima di ritentare la connessione
+  setup_wifi();  // Ritenta la connessione WiFi
+}
 
 void callbackFrequency(char* topic, byte* payload, unsigned int length) {
   Serial.println(String("Message arrived on [") + topic + "] len: " + length );
@@ -96,7 +89,7 @@ void callbackFrequency(char* topic, byte* payload, unsigned int length) {
   for (int i = 0; i < length; i++) {
     payloadStr += (char)payload[i];
   }
-  
+
   if (payloadStr.length() > 0 && payloadStr.toInt() != 0) {
     frequency = payloadStr.toInt();
     Serial.println(String("Received frequency: ") + frequency);
@@ -104,7 +97,6 @@ void callbackFrequency(char* topic, byte* payload, unsigned int length) {
     Serial.println("Invalid frequency value received");
   }
 }
-
 
 void reconnect() {
   int attempts = 0;
@@ -130,10 +122,13 @@ void reconnect() {
   }
 }
 
-
 void setup() {
-  greenLed = new Led (GREEN_LED);
-  redLed = new Led (RED_LED);
+  if(!Serial) {
+    Serial.begin(115200);
+  }
+  
+  greenLed = new Led(GREEN_LED);
+  redLed = new Led(RED_LED);
 
   greenLed->switchOff();
   redLed->switchOff();
@@ -143,8 +138,8 @@ void setup() {
   client.setServer(mqtt_server, 1883);
   client.setCallback(callbackFrequency);
 
-  //assign task to OS
-  xTaskCreatePinnedToCore(functions::waterDetectionTask,"Task1",10000,NULL,1,&Task1,0);
+  // Assign task to OS
+  xTaskCreatePinnedToCore(functions::waterDetectionTask, "Task1", 10000, NULL, 1, &Task1, 0);
 }
 
 void loop() {
@@ -174,5 +169,9 @@ void loop() {
     /* publishing the msg */
     client.publish(topic2, msg1);
   }
+  
+  // Handle WiFi failure independently in the loop
+  if (WiFi.status() != WL_CONNECTED) {
+    handleWifiFailure();
+  }
 }
-

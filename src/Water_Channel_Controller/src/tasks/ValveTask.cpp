@@ -30,28 +30,28 @@ void ValveTask::tick(){
       switch(waterController->getState()){
         case NORMAL:
           valveOpening = 25;
-          servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out potenziometro*/
+          servo->setPosition(setAngle(valveOpening));
           lcd->clearDisplay();
           lcd->video(valveOpening, "AUTOMATIC");
         break;
 
         case PREALLARMTOOHIGH:
           valveOpening = 25;
-          servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out potenziometro*/
+          servo->setPosition(setAngle(valveOpening));
           lcd->clearDisplay();
           lcd->video(valveOpening, "AUTOMATIC");
         break;
 
         case ALLARMTOOHIGH:
           valveOpening = 50;
-          servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out potenziometro*/
+          servo->setPosition(setAngle(valveOpening));
           lcd->clearDisplay();
           lcd->video(valveOpening, "AUTOMATIC");
         break;
 
         case ALLARMTOOHIGHCRITIC:
           valveOpening = 100;
-          servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out potenziometro*/
+          servo->setPosition(setAngle(valveOpening));
           lcd->clearDisplay();
           lcd->video(valveOpening, "AUTOMATIC");
         break;

@@ -16,8 +16,8 @@ public:
 
 private:
   WaterController* waterController;
-  String stateAsString(State currentState);
   bool isMsgAvailable();
+  String stateAsString(State currentState);
   String getMsg();
 };
 

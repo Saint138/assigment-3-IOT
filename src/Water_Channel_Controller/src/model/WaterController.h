@@ -22,6 +22,7 @@ class WaterController {
         void setAllarmTooHighCritic();
 
         State getState();
+        String stateAsString();
 
         double getCurrentDistance();
         long getCurrentTime();

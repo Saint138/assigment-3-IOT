@@ -6,17 +6,13 @@
 
 bool automatic;
 bool dashboard;
-extern int valveOpening;
 
 class StateTask: public Task {
-public:
-  
-  void tick();
-  StateTask(WaterController* waterController);
-
-private:
-WaterController* waterController;
-
+  private:
+    WaterController* waterController;
+  public:
+    void tick();
+    StateTask(WaterController* waterController);
 };
 
 

@@ -19,15 +19,13 @@ public class RiverMonitoringSystemState {
 	private static RiverMonitoringSystemState instance = null;
 
 	private List<MQTTFrequency> frequencyHistory;
-	private List<MQTTFrequency> frequencyStateHistory;
-	private List<MQTTWaterLevel> waterLevelStateHistory;
+	private List<MQTTWaterLevel> waterLevelHistory;
 	private Queue<DashboardMessage> dashboardMessages;
 
 	private RiverMonitoringSystemState() {
 		this.frequencyHistory = new ArrayList<>();
-		this.waterLevelStateHistory = new ArrayList<>();
+		this.waterLevelHistory = new ArrayList<>();
 		this.dashboardMessages = new ArrayDeque<>();
-		this.frequencyStateHistory = new ArrayList<>();
 	}
 
 	public static RiverMonitoringSystemState getInstance() {
@@ -45,26 +43,15 @@ public class RiverMonitoringSystemState {
 		return Optional.ofNullable(this.dashboardMessages.poll());
 	}
 
-	public synchronized List<MQTTFrequency> getFrequencyStateHistory() {
-		return this.frequencyStateHistory;
+	public synchronized List<MQTTWaterLevel> getWaterLevelHistory() {
+		return waterLevelHistory;
 	}
 
-	public synchronized Optional<MQTTFrequency> getLastFrequencyState() {
-	    if(this.frequencyStateHistory.size() == 0) {
-	        return Optional.empty();
-	    }
-	    return Optional.of(this.frequencyStateHistory.get(this.frequencyStateHistory.size() - 1));
-	}
-
-	public synchronized List<MQTTWaterLevel> getWaterLevelStateHistory() {
-		return waterLevelStateHistory;
-	}
-
-	public synchronized Optional<MQTTWaterLevel> getLastWaterLevelState() {
-		if(waterLevelStateHistory.size() == 0) {
+	public synchronized Optional<MQTTWaterLevel> getLastWaterLevel() {
+		if(waterLevelHistory.size() == 0) {
 			return Optional.empty();
 		}
-		return Optional.of(waterLevelStateHistory.get(waterLevelStateHistory.size() - 1));
+		return Optional.of(waterLevelHistory.get(waterLevelHistory.size() - 1));
 	}
 
 	public synchronized Optional<MQTTFrequency> getLastFrequency() {
@@ -72,9 +59,5 @@ public class RiverMonitoringSystemState {
 			return Optional.empty();
 		}
 		return Optional.of(frequencyHistory.get(frequencyHistory.size() - 1));
-	}
-
-	public synchronized List<MQTTFrequency> getFrequencyHistory() {
-			return this.frequencyHistory;
 	}
 }

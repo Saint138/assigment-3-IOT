@@ -18,7 +18,7 @@ private:
   ServoMotor* servo;
   Potentiometer* potentiometer;
   LCD* lcd;
-  enum { AUTO, MANUAL, DASHBOARD} valvestate; 
+  enum {AUTO, MANUAL, DASHBOARD} valvestate; 
   int setAngle(int percentage);
 };
 

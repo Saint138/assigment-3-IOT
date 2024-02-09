@@ -16,7 +16,7 @@ public class RunService {
 
 	// Vars with synchronized method used in multiple threads
 	private static boolean automatic = true;
-    private static int valveOpening = 25;
+    private static String currentState = "NORMAL";
     private static boolean dashboard = false;
 	private static SerialCommunication arduinoMsg;
 
@@ -54,7 +54,7 @@ public class RunService {
             final Thread sender = new Thread(() -> {
                 while (true) {
 
-                    Optional<MQTTWaterLevel> lastWaterLevel = RiverMonitoringSystemState.getInstance().getLastWaterLevelState();
+                    Optional<MQTTWaterLevel> lastWaterLevel = RiverMonitoringSystemState.getInstance().getLastWaterLevel();
                     Optional<DashboardMessage> dashboardMsg = RiverMonitoringSystemState.getInstance().getLastDashboardMessage();
 
                     if (dashboardMsg.isPresent()) {
@@ -65,7 +65,7 @@ public class RunService {
                     } else if (lastWaterLevel.isPresent()) {
                         setDashboard(false);
                         setAutomatic(true);
-                        arduinoMsg = new SerialCommunication(true, getRiverState(valveOpening) , false);
+                        arduinoMsg = new SerialCommunication(true, getRiverState(lastWaterLevel.get().getWaterLevel()) , false);
                         sendMessage(arduinoMsg, arduinoChannel);
                     } else {
                         try {
@@ -97,10 +97,10 @@ public class RunService {
                                 } else {
                                     setAutomatic(false);
                                 }
-                                if(msg.contains("VALVE OPENING: ")) {
-                                    String numberStr = msg.substring(msg.indexOf("VALVE OPENING: ") + 15);
-                                    numberStr = numberStr.replaceAll("[^0-9].*", "");
-                                    valveOpening = Integer.parseInt(numberStr);
+                                if(msg.contains("STATE: ")) {
+                                    String stateStr = msg.substring(msg.indexOf("STATE: ") + 7);
+                                    stateStr = stateStr.trim(); // Prende la stringa dopo "STATE: "
+                                    currentState = stateStr;
                                 }
                             }
                         }
@@ -128,15 +128,15 @@ public class RunService {
     }
 
     private static String getRiverState(int waterLevel) {
-        if (waterLevel < WL.WL4.getValue()) {
+        if (waterLevel < config.WL4) {
             return "ALARM-TOO-HIGH-CRITIC";
-        } else if (waterLevel < WL.WL3.getValue()) {
+        } else if (waterLevel < config.WL3) {
             return "ALARM-TOO-HIGH";
-        } else if (waterLevel < WL.WL2.getValue()) {
+        } else if (waterLevel < config.WL2) {
             return "PRE-ALARM-TOO-HIGH";
-        } else if (waterLevel <= WL.WL1.getValue()) {
+        } else if (waterLevel <= config.WL1) {
             return "NORMAL";
-        } else if (waterLevel > WL.WL1.getValue()) {
+        } else if (waterLevel > config.WL1) {
             return "ALARM-TOO-LOW";
         } else {
             return "ERROR on RunService";
@@ -159,7 +159,7 @@ public class RunService {
     	dashboard = value;
     }
 
-    public static synchronized int getValveOpening() {
-        return valveOpening;
+    public static synchronized String getCurrentState() {
+        return currentState;
     }
 }

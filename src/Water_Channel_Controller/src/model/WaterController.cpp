@@ -39,6 +39,28 @@ State WaterController::getState() {
     return state;
 }
 
+String WaterController::stateAsString() {
+    String msg;
+    switch(state) {
+        case NORMAL:
+            msg = "NORMAL";
+            break;
+        case ALLARMTOOHIGH:
+            msg = "ALLARM-TOO-HIGH";
+            break;
+        case PREALLARMTOOHIGH:
+            msg = "PRE-ALLARM-TOO-HIGH";
+            break;
+        case ALLARMTOOHIGHCRITIC:
+            msg = "ALLARM-TOO-HIGH-CRITIC";
+            break;
+        case ALLARMTOOLOW:
+            msg = "ALLARM-TOO-LOW";
+            break;
+    }
+    return msg;
+}
+
 long WaterController::getCurrentTime(){
     return time;
 }

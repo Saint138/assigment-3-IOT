@@ -15,5 +15,4 @@ void StateTask::tick() {
         }
         dashboard = false;
     }
-    //waterController->LCDwrite(automatic ? "Automatic" : "Manual");
 }

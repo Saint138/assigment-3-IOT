@@ -1,6 +1,7 @@
 package river_monitoring_service.http;
 
 import river_monitoring_service.RiverMonitoringSystemState;
+import river_monitoring_service.RunService;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -37,16 +38,14 @@ public class RiverResource extends AbstractVerticle {
 	}
 
 	/**
-	 * Get handler for the movement and light histories.
+	 * Get handler for the state of Arduino (state and automatic), waterlevel (esp) histories and dashboard messages.
 	 * */
 	private void handleGetResource(final RoutingContext routingContext) {
 		JsonObject res = new JsonObject();
-		res.put("light", RiverMonitoringSystemState.getInstance().getFrequencyStateHistory().stream()
-		        .map(msg -> new ResponseData(msg.getMsgDate(), msg.getFrequency()))
-		        .toList());
-		res.put("movement", RiverMonitoringSystemState.getInstance().getWaterLevelStateHistory().stream()
-		        .map(msg -> new ResponseData(msg.getDateTime(), msg.getWaterLevel()))
-		        .toList());
+		res.put("state", RunService.getCurrentState());
+		res.put("waterLevel", RiverMonitoringSystemState.getInstance().getLastWaterLevel().get().getWaterLevel());
+		res.put("dashboard", RunService.getDashboard());
+		res.put("automatic", RunService.getAutomatic());
 
 		routingContext.response()
 			.putHeader("content-type", "application/json")
@@ -57,22 +56,12 @@ public class RiverResource extends AbstractVerticle {
 	 * Post handler to send a new command to Arduino.
 	 * */
 	private void handlePostResource(final RoutingContext routingContext) {
-	    /* routingContext.request().bodyHandler(bodyHandler -> {
-	        var body = bodyHandler.toJsonObject();
-	        RiverMonitoringSystemState.getInstance().addDashboardMessage(new DashboardMessage(Boolean.parseBoolean(body.getString("light")),
-	                    Integer.parseInt(body.getString("movement"))));
-	    });
-	    routingContext.response()
-    	        .putHeader("content-type", "application/json")
-                .end(new JsonObject().encodePrettily()); */
 		routingContext.request().bodyHandler(bodyHandler -> {
 			var body = bodyHandler.toJsonObject();
-			boolean automatic = Boolean.parseBoolean(body.getString("automatic"));
 			int valveOpening = Integer.parseInt(body.getString("valveOpening"));
 		
-			// Esegui le operazioni necessarie con i dati ricevuti dal client
-			// ...
-		
+			RiverMonitoringSystemState.getInstance().addDashboardMessage(new DashboardMessage(valveOpening));
+
 			// Invia una risposta al client (se necessario)
 			routingContext.response()
 				.putHeader("content-type", "application/json")
@@ -81,41 +70,6 @@ public class RiverResource extends AbstractVerticle {
 	}
 
 	private void log(final String msg) {
-		System.out.println("[ROOM RESOURCE] " + msg);
+		System.out.println("[RIVER RESOURCE] " + msg);
 	}
-
-	/**
-	 * Class to pack the data to be sent to the client.
-	 * */
-	private final class ResponseData {
-
-            private String date;
-            private int value;
-
-	    public ResponseData(final String date, final int value) {
-	        this.date = date;
-	        this.value = value;
-	    }
-
-	    @SuppressWarnings("unused")
-            public String getDate() {
-	    	return this.date;
-	    }
-
-	    @SuppressWarnings("unused")
-            public int isValue() {
-	    	return this.value;
-	    }
-
-            @SuppressWarnings("unused")
-            public void setDate(final String date) {
-                this.date = date;
-            }
-
-            @SuppressWarnings("unused")
-            public void setValue(final int value) {
-                this.value = value;
-            }
-	}
-
 }

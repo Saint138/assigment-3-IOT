@@ -1,7 +1,5 @@
 package river_monitoring_service.mqtt;
 
-import java.time.LocalDateTime;
-
 /**
  * Class that represents the MQTT movement message sent from the ESP.
  * */

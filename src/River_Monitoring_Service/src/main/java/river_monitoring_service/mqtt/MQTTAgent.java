@@ -4,10 +4,9 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
-import river_monitoring_service.F;
+import river_monitoring_service.config;
 import /* src.main.java. */river_monitoring_service.RiverMonitoringSystemState;
 import /* src.main.java. */river_monitoring_service.RunService;
-import river_monitoring_service.WL;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.buffer.Buffer;
@@ -41,7 +40,7 @@ public class MQTTAgent extends AbstractVerticle {
                 if (s.topicName().equals(Topics.WATERLEVEL.getName())) {
                     if (s.payload().toString().contains("{")) {
                         waterLevel = msgToEsp.fromJson(s.payload().toString(), MQTTWaterLevel.class);
-                        RiverMonitoringSystemState.getInstance().getWaterLevelStateHistory().add(waterLevel);
+                        RiverMonitoringSystemState.getInstance().getWaterLevelHistory().add(waterLevel);
                     }
                 }
 
@@ -49,13 +48,13 @@ public class MQTTAgent extends AbstractVerticle {
                 System.out.println("QoS: " + s.qosLevel());
 
                 if(RunService.getAutomatic()) {
-                    if(waterLevel.getWaterLevel() <= WL.WL2.getValue()) {
-                        MQTTFrequency frequency = new MQTTFrequency(F.F1.getValue());
+                    if(waterLevel.getWaterLevel() <= config.WL2) {
+                        MQTTFrequency frequency = new MQTTFrequency(config.F1);
                         String jsonFrequency = msgToEsp.toJson(frequency);
                         Buffer buffer = Buffer.buffer(jsonFrequency);
                         client.publish(Topics.FREQUENCY.getName(), buffer, MqttQoS.AT_LEAST_ONCE, false, false);
-                    } else if(waterLevel.getWaterLevel() >WL.WL2.getValue()) {
-                        MQTTFrequency frequency = new MQTTFrequency(F.F2.getValue());
+                    } else if(waterLevel.getWaterLevel() > config.WL2) {
+                        MQTTFrequency frequency = new MQTTFrequency(config.F2);
                         String jsonFrequency = msgToEsp.toJson(frequency);
                         Buffer buffer = Buffer.buffer(jsonFrequency);
                         client.publish(Topics.FREQUENCY.getName(), buffer, MqttQoS.AT_LEAST_ONCE, false, false);

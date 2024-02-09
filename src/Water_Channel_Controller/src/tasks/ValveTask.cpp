@@ -1,8 +1,6 @@
 #include "ValveTask.h"
 #include "StateTask.h"
 
-int valveOpening;
-
 ValveTask::ValveTask(WaterController* waterController, Potentiometer* potentiometer) {
   this->waterController = waterController;
   this->potentiometer = potentiometer;
@@ -14,10 +12,10 @@ void ValveTask::init(int period){
 }
 
 void ValveTask::tick(){
-  if(automatic) {
+  if(waterController->isAutomatic()) {
     valvestate = AUTO;
   } else {
-    if(dashboard) {
+    if(waterController->isDashboard()) {
       valvestate = DASHBOARD;
     } else {
       valvestate = MANUAL;
@@ -25,13 +23,17 @@ void ValveTask::tick(){
   }
   
   switch (valvestate){
+    int valveOpening;
+
     case MANUAL:
       valveOpening = map(potentiometer->getValue(), 0, 1023, 0, 100);
+      waterController->setValveOpening(valveOpening);
       waterController->MotorPosition(setAngle(valveOpening));
       waterController->LCDwrite(valveOpening, "MANUAL");
     break;
 
     case DASHBOARD:
+      valveOpening = waterController->getValveOpening();
       waterController->MotorPosition(setAngle(valveOpening));
       waterController->LCDwrite(valveOpening, "DASHBOARD");
     break;
@@ -42,35 +44,39 @@ void ValveTask::tick(){
         case NORMAL:
           valveOpening = 25;
           waterController->MotorPosition(setAngle(valveOpening));
+          waterController->setValveOpening(valveOpening);
           waterController->LCDwrite(valveOpening, "AUTOMATIC");
         break;
 
         case PREALLARMTOOHIGH:
           valveOpening = 25;
           waterController->MotorPosition(setAngle(valveOpening));
+          waterController->setValveOpening(valveOpening);
           waterController->LCDwrite(valveOpening, "AUTOMATIC");
         break;
 
         case ALLARMTOOHIGH:
           valveOpening = 50;
           waterController->MotorPosition(setAngle(valveOpening));
+          waterController->setValveOpening(valveOpening);
           waterController->LCDwrite(valveOpening, "AUTOMATIC");
         break;
 
         case ALLARMTOOHIGHCRITIC:
           valveOpening = 100;
           waterController->MotorPosition(setAngle(valveOpening));
+          waterController->setValveOpening(valveOpening);
           waterController->LCDwrite(valveOpening, "AUTOMATIC");
         break;
 
         case ALLARMTOOLOW:
           valveOpening = 0;
           waterController->MotorPosition(setAngle(valveOpening));
+          waterController->setValveOpening(valveOpening);
           waterController->LCDwrite(valveOpening, "AUTOMATIC");
           break;
 
       }
-    Serial.println("stato cambiato:" + waterController->stateAsString());
     break;
   }
 }

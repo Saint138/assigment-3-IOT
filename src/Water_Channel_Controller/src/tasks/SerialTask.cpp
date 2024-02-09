@@ -10,38 +10,44 @@ void SerialTask::init(int period) {
 
 void SerialTask::tick() {
     if (isMsgAvailable()) {
+        bool automatic;
+        bool dashboard;
         String msg = getMsg(); 
 
-        if(msg == stateAsString(NORMAL)) {
-            automatic = true;
-            dashboard = false;
-            waterController->setNormal();
-        } else if(msg == stateAsString(ALLARMTOOHIGH)) {
-            automatic = true;
-            dashboard = false;
-            waterController->setAllarmTooHigh();
-        } else if(msg == stateAsString(ALLARMTOOHIGHCRITIC)) {
-            automatic = true;
-            dashboard = false;
-            waterController->setAllarmTooHighCritic();
-        } else if(msg == stateAsString(PREALLARMTOOHIGH)) {
-            automatic = true;
-            dashboard = false;
-            waterController->setPreAllarmTooHigh();
-        } else if(msg == stateAsString(ALLARMTOOLOW)) {
-            automatic = true;
-            dashboard = false;
-            waterController->setAllarmTooLow();
-        } else {
-            automatic = false;
-            dashboard = true;
-            valveOpening = msg.toInt();
-        }
+        if(waterController->isAutomatic() || waterController->isDashboard()) {
+            if(msg == stateAsString(NORMAL)) {
+                automatic = true;
+                dashboard = false;
+                waterController->setNormal();
+            } else if(msg == stateAsString(ALLARMTOOHIGH)) {
+                automatic = true;
+                dashboard = false;
+                waterController->setAllarmTooHigh();
+            } else if(msg == stateAsString(ALLARMTOOHIGHCRITIC)) {
+                automatic = true;
+                dashboard = false;
+                waterController->setAllarmTooHighCritic();
+            } else if(msg == stateAsString(PREALLARMTOOHIGH)) {
+                automatic = true;
+                dashboard = false;
+                waterController->setPreAllarmTooHigh();
+            } else if(msg == stateAsString(ALLARMTOOLOW)) {
+                automatic = true;
+                dashboard = false;
+                waterController->setAllarmTooLow();
+            } else {
+                automatic = false;
+                dashboard = true;
+                waterController->setValveOpening(msg.toInt());
+            }
 
-        Serial.println(waterController->stateAsString());
+            waterController->setAutomatic(automatic);
+            waterController->setDashboard(dashboard);
+            Serial.println(waterController->stateAsString());
+        }
     }
 
-    Serial.println("AUTOMATIC: " + String(automatic ? "true" : "false") + ", DASHBOARD: " + String(dashboard ? "true" : "false") + ", STATE: " + waterController->stateAsString());
+    Serial.println("AUTOMATIC: " + String(waterController->isAutomatic() ? "true" : "false") + ", DASHBOARD: " + String(waterController->isDashboard() ? "true" : "false") + ", STATE: " + waterController->stateAsString());
 }
 
 bool SerialTask::isMsgAvailable() {

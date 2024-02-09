@@ -1,8 +1,5 @@
 #include "StateTask.h"
 
-bool automatic = true;
-bool dashboard = false;
-
 StateTask::StateTask(WaterController* waterController) {
   this->waterController = waterController;
 }
@@ -13,11 +10,11 @@ void StateTask::init(int period) {
 
 void StateTask::tick() {
     if(waterController->isButtonClicked()){
-        if(automatic){
-            automatic = false;
+        if(waterController->isAutomatic()){
+            waterController->setAutomatic(false);
         } else {
-            automatic = true;
+            waterController->setAutomatic(true);
         }
-        dashboard = false;
+        waterController->setDashboard(false);
     }
 }

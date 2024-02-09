@@ -9,7 +9,11 @@ WaterController::WaterController(Button* button, ServoMotor* servoMotor, LCD* lc
 
 void WaterController::init(){
     servoMotor->on();
+    servoMotor->setPosition(25);
     State state;
+    this->automatic = true;
+    this->dashboard = false;
+    this->valveOpening = 25;
     this->setNormal();
 }
 
@@ -64,9 +68,33 @@ long WaterController::getCurrentTime(){
     return time;
 }
 
+int WaterController::getValveOpening(){
+    return valveOpening;
+}
+
+bool WaterController::isAutomatic(){
+    return automatic;
+}
+
+bool WaterController::isDashboard(){
+    return dashboard;
+}
+
+void WaterController::setValveOpening(int valveOpening){
+    this->valveOpening = valveOpening;
+}
+
+void WaterController::setAutomatic(bool automatic){
+    this->automatic = automatic;
+}
+
+void WaterController::setDashboard(bool dashboard){
+    this->dashboard = dashboard;
+}
+
 bool WaterController::isButtonClicked(){
     button->sync();
-    return button->isClicked();
+    return button->isPressed();
 }
 
 void WaterController::LCDwrite(int valve, String msg){

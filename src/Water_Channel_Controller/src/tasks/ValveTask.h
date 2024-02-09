@@ -5,9 +5,6 @@
 #include "../model/WaterController.h"
 #include "../devices/Potentiometer.h"
 
-extern bool automatic;
-extern bool dashboard;
-
 class ValveTask: public Task {
 public:
   ValveTask(WaterController* waterController, Potentiometer* potentiometer);

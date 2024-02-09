@@ -14,7 +14,7 @@ ServoMotor* servoMotor;
 WaterController* waterController;
 
 void setup() {
-  sched.init(200);
+  sched.init(100);
 
   Serial.begin(9600);
 
@@ -28,9 +28,9 @@ void setup() {
   Task* stateTask = new StateTask(waterController);
   Task* serialTask = new SerialTask(waterController);
 
-  stateTask->init(150);
-  valveTask->init(150);
-  serialTask->init(150);
+  stateTask->init(800);
+  valveTask->init(1000);
+  serialTask->init(2000);
 
   sched.addTask(serialTask);
   sched.addTask(stateTask);

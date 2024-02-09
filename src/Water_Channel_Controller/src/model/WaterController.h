@@ -26,6 +26,13 @@ class WaterController {
 
         double getCurrentDistance();
         long getCurrentTime();
+        int getValveOpening();
+        bool isAutomatic();
+        bool isDashboard();
+
+        void setValveOpening(int valveOpening);
+        void setAutomatic(bool automatic);
+        void setDashboard(bool dashboard);
     
         bool isButtonClicked();
 
@@ -37,6 +44,9 @@ class WaterController {
 
     private:
     
+        bool automatic;
+        bool dashboard;
+        int valveOpening;
         double temp;
         long time;
         double distance;

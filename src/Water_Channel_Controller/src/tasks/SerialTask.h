@@ -4,10 +4,6 @@
 #include "Task.h"
 #include "./model/WaterController.h"
 
-extern int valveOpening;
-extern bool automatic;
-extern bool dashboard;
-
 class SerialTask: public Task {
 public:
   SerialTask(WaterController* waterController);

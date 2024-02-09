@@ -35,7 +35,7 @@ class WaterController {
         void setValveOpening(int valveOpening);
         void setAutomatic(bool automatic);
         void setDashboard(bool dashboard);
-    
+
         bool isButtonClicked();
 
         void LCDwrite(int valve, String text);

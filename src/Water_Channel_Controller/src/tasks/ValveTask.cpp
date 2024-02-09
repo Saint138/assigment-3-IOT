@@ -1,6 +1,8 @@
 #include "ValveTask.h"
 #include "StateTask.h"
 
+int valveOpening = 25;
+
 ValveTask::ValveTask(ServoMotor* servoMotor, WaterController* waterController, Potentiometer* potentiometer, LCD* lcd) {
   this->servo = servoMotor;
   this->waterController = waterController;
@@ -12,7 +14,7 @@ void ValveTask::init(int period){
   Task::init(period);
   valvestate = AUTO;
 }
-  
+
 void ValveTask::tick(){
   if(automatic) {
     valvestate = AUTO;
@@ -25,6 +27,17 @@ void ValveTask::tick(){
   }
   
   switch (valvestate){
+    case MANUAL:
+      valveOpening = map(potentiometer->getValue(), 0, 1023, 0, 100);
+      servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out potenziometro*/
+      lcd->video(valveOpening, "MANUAL");
+    break;
+
+    case DASHBOARD:
+      servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out dashboard*/
+      lcd->video(valveOpening, "MANUAL");
+    break;
+
     case AUTO:
       /*switch con casi aperture*/
       switch(waterController->getState()){
@@ -61,26 +74,13 @@ void ValveTask::tick(){
           servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out potenziometro*/
           lcd->clearDisplay();
           lcd->video(valveOpening, "AUTOMATIC");
-        break;
+          break;
 
       }
     break;
-
-    case MANUAL:
-      int valveOpening = map(potentiometer->getValue(), 0, 1023, 0, 100);
-      servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out potenziometro*/
-      lcd->video(valveOpening, "MANUAL");
-    break;
-
-    case DASHBOARD:
-      servo->setPosition(setAngle(valveOpening)); /*da aggiornare, valore out dashboard*/
-      lcd->video(valveOpening, "MANUAL");
-    break;
   }
-
-  
 }
 
 int setAngle(int percentage) {
-    return percentage*180/100;
-  }
+  return percentage * 180 / 100;
+}

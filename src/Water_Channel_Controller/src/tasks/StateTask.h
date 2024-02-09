@@ -4,14 +4,12 @@
 #include "Task.h"
 #include "../model/WaterController.h"
 
-bool automatic;
-bool dashboard;
-
 class StateTask: public Task {
   private:
     WaterController* waterController;
   public:
     void tick();
+    void init(int period);
     StateTask(WaterController* waterController);
 };
 

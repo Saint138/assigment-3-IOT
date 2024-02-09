@@ -5,7 +5,8 @@
 #include "../model/WaterController.h"
 #include "../devices/Potentiometer.h"
 
-int valveOpening;
+extern bool automatic;
+extern bool dashboard;
 
 class ValveTask: public Task {
 public:
@@ -18,8 +19,10 @@ private:
   ServoMotor* servo;
   Potentiometer* potentiometer;
   LCD* lcd;
-  enum {AUTO, MANUAL, DASHBOARD} valvestate; 
-  int setAngle(int percentage);
+  enum State {AUTO, MANUAL, DASHBOARD} valvestate;
+  int setAngle(int percentage) {
+      return percentage * 180 / 100;
+  }
 };
 
 #endif

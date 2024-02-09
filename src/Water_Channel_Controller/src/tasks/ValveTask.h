@@ -3,17 +3,15 @@
 
 #include "Task.h"
 #include "../model/WaterController.h"
-#include "../devices/Potentiometer.h"
 
 class ValveTask: public Task {
 public:
-  ValveTask(WaterController* waterController, Potentiometer* potentiometer);
+  ValveTask(WaterController* waterController);
   void init(int period);
   void tick();
 
 private:
   WaterController* waterController;
-  Potentiometer* potentiometer;
   enum State {AUTO, MANUAL, DASHBOARD} valvestate;
   int setAngle(int percentage) {
       return percentage * 180 / 100;

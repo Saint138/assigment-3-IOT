@@ -5,7 +5,7 @@
 
 #define SERVO_PIN 3
 
-#define POT_PIN A1
+#define POT_PIN A0
 
 #define LCD_SDA_PIN A4
 #define LCD_SCL_PIN A5

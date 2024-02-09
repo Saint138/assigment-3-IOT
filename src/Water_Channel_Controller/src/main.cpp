@@ -22,9 +22,9 @@ void setup() {
   lcd = new LCD();
   button = new ButtonImpl(BUT_PIN);
   potentiometer = new Potentiometer(POT_PIN);
-  waterController = new WaterController(button, servoMotor, lcd);
+  waterController = new WaterController(button, servoMotor, lcd, potentiometer);
 
-  Task* valveTask = new ValveTask(waterController, potentiometer);
+  Task* valveTask = new ValveTask(waterController);
   Task* stateTask = new StateTask(waterController);
   Task* serialTask = new SerialTask(waterController);
 

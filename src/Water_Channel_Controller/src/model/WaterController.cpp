@@ -1,9 +1,10 @@
 #include "WaterController.h"
 
-WaterController::WaterController(Button* button, ServoMotor* servoMotor, LCD* lcd) {
+WaterController::WaterController(Button* button, ServoMotor* servoMotor, LCD* lcd, Potentiometer* potentiometer) {
     this->button = button;
     this->servoMotor = servoMotor;
     this->lcd = lcd;
+    this->potentiometer = potentiometer;
     this->init();
 }
 
@@ -66,6 +67,10 @@ String WaterController::stateAsString() {
 
 long WaterController::getCurrentTime(){
     return time;
+}
+
+int WaterController::getPotentiometer() {
+    return map(potentiometer->getValue(), 0, 1023, 0, 100);
 }
 
 int WaterController::getValveOpening(){

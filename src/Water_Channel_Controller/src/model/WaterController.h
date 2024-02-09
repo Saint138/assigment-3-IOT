@@ -5,6 +5,7 @@
 #include "LiquidCrystal_I2C.h"
 #include "TimerOne.h"
 #include "config.h"
+#include "devices/Potentiometer.h"
 #include "devices/ButtonImpl.h"
 #include "devices/ServoMotorImpl.h"
 #include "devices/LCD.h"
@@ -12,7 +13,7 @@
 class WaterController {
 
     public: 
-        WaterController(Button* button, ServoMotor* servoMotor, LCD* lcd);
+        WaterController(Button* button, ServoMotor* servoMotor, LCD* lcd, Potentiometer* potentiometer);
         void init();
         
         void setNormal();
@@ -26,6 +27,7 @@ class WaterController {
 
         double getCurrentDistance();
         long getCurrentTime();
+        int getPotentiometer();
         int getValveOpening();
         bool isAutomatic();
         bool isDashboard();
@@ -54,6 +56,7 @@ class WaterController {
         Button* button;
         ServoMotor* servoMotor;
         LCD* lcd;
+        Potentiometer* potentiometer;
         State state;
 };
 

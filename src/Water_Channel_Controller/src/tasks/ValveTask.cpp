@@ -1,9 +1,7 @@
 #include "ValveTask.h"
-#include "StateTask.h"
 
-ValveTask::ValveTask(WaterController* waterController, Potentiometer* potentiometer) {
+ValveTask::ValveTask(WaterController* waterController) {
   this->waterController = waterController;
-  this->potentiometer = potentiometer;
 }
   
 void ValveTask::init(int period){
@@ -26,7 +24,7 @@ void ValveTask::tick(){
     int valveOpening;
 
     case MANUAL:
-      valveOpening = map(potentiometer->getValue(), 0, 1023, 0, 100);
+      valveOpening = waterController->getPotentiometer();
       waterController->setValveOpening(valveOpening);
       waterController->MotorPosition(setAngle(valveOpening));
       waterController->LCDwrite(valveOpening, "MANUAL");

@@ -1,7 +1,7 @@
 #include "functions.h"
 
 // Inizializzazione della variabile statica
-int functions::waterLevel = 0.0;
+int functions::waterLevel = 0;
 
 void functions::waterDetectionTask(void* parameter) {
     Sonar* sonar = new Sonar(TRIG_PIN, ECHO_PIN, MAXTIME);
@@ -13,6 +13,6 @@ void functions::waterDetectionTask(void* parameter) {
     }
 }
 
-float functions::getWaterLevel() {
+int functions::getWaterLevel() {
     return waterLevel;
 }

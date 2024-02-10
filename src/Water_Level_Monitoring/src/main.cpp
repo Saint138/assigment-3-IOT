@@ -14,7 +14,7 @@
 char str[56];
 
 /* Take global variables */
-int frequency = 0;
+int frequency = 3000;
 
 /* wifi network info */
 const char* ssid = "Martino's Galaxy A52";

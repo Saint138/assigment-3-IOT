@@ -12,9 +12,11 @@ void StateTask::tick() {
     if(waterController->isButtonClicked()){
         if(waterController->isAutomatic()){
             waterController->setAutomatic(false);
+        } else if(waterController->isDashboard()) {
+            waterController->setDashboard(false);
         } else {
             waterController->setAutomatic(true);
+            waterController->setDashboard(false);
         }
-        waterController->setDashboard(false);
     }
 }

@@ -64,7 +64,7 @@ public class RunService {
                     	arduinoMsg = new SerialCommunication(false, dashboardMsg.toString(), true);
                     	sendMessage(arduinoMsg, arduinoChannel);
                     } else if (lastWaterLevel.isPresent()) {
-                        System.out.println("New WaterLevel Msg available: " + lastWaterLevel.get());
+                        System.out.println("New WaterLevel Msg available: " + lastWaterLevel.get().getWaterLevel());
                         setDashboard(false);
                         setAutomatic(true);
                         arduinoMsg = new SerialCommunication(true, getRiverState(lastWaterLevel.get().getWaterLevel()) , false);

@@ -30,7 +30,7 @@ const char* topic2 = "waterLevel";
 /*LED pointers*/
 Led* redLed;
 Led* greenLed;
-  Sonar* sonar = new Sonar(TRIG_PIN, ECHO_PIN, MAXTIME);
+Sonar* sonar = new Sonar(TRIG_PIN, ECHO_PIN, MAXTIME);
 
 /* MQTT client management */
 

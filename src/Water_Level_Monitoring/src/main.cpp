@@ -30,6 +30,7 @@ const char* topic2 = "waterLevel";
 /*LED pointers*/
 Led* redLed;
 Led* greenLed;
+  Sonar* sonar = new Sonar(TRIG_PIN, ECHO_PIN, MAXTIME);
 
 /* MQTT client management */
 
@@ -130,8 +131,7 @@ void setup() {
   client.setCallback(callbackFrequency);
 
   // Assign task to OS
-  Sonar* sonar = new Sonar(TRIG_PIN, ECHO_PIN, MAXTIME);
-  xTaskCreatePinnedToCore(functions::waterDetectionTask, "Task1", 10000, &sonar, 1, &Task1, 0);
+  xTaskCreatePinnedToCore(functions::waterDetectionTask, "Task1", 10000, sonar, 1, &Task1, 0);
 }
 
 void loop() {

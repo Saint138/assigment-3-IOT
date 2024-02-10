@@ -128,15 +128,15 @@ public class RunService {
 
     private static String getRiverState(int waterLevel) {
         if (waterLevel < config.WL4) {
-            return "ALARM-TOO-HIGH-CRITIC";
+            return "ALLARM-TOO-HIGH-CRITIC";
         } else if (waterLevel < config.WL3) {
-            return "ALARM-TOO-HIGH";
+            return "ALLARM-TOO-HIGH";
         } else if (waterLevel < config.WL2) {
-            return "PRE-ALARM-TOO-HIGH";
+            return "PRE-ALLARM-TOO-HIGH";
         } else if (waterLevel <= config.WL1) {
             return "NORMAL";
         } else if (waterLevel > config.WL1) {
-            return "ALARM-TOO-LOW";
+            return "ALLARM-TOO-LOW";
         } else {
             return "ERROR on RunService";
         }

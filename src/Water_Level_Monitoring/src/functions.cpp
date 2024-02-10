@@ -4,9 +4,7 @@
 int functions::waterLevel = 0;
 
 void functions::waterDetectionTask(void* parameter) {
-    TaskParams* params = (TaskParams*)parameter;
-    int* frequencyPtr = params->frequencyPtr;
-    Sonar* sonar = params->sonar;
+    Sonar* sonar = (Sonar*) parameter;
     for (;;) {
         int currentWaterLevel = sonar->toInt();
         // Aggiorna la variabile waterLevel
@@ -17,9 +15,6 @@ void functions::waterDetectionTask(void* parameter) {
             // Aggiorna la variabile waterLevel solo se non c'è stato un errore
             waterLevel = currentWaterLevel;
         }
-        
-        // Attendi per la frequenza specificata
-        vTaskDelay(*frequencyPtr / portTICK_PERIOD_MS);
     }
 }
 

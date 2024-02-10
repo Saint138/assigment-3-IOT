@@ -131,8 +131,7 @@ void setup() {
 
   // Assign task to OS
   Sonar* sonar = new Sonar(TRIG_PIN, ECHO_PIN, MAXTIME);
-  TaskParams params = { &frequency, sonar };
-  xTaskCreatePinnedToCore(functions::waterDetectionTask, "Task1", 10000, &params, 1, &Task1, 0);
+  xTaskCreatePinnedToCore(functions::waterDetectionTask, "Task1", 10000, &sonar, 1, &Task1, 0);
 }
 
 void loop() {
@@ -145,17 +144,21 @@ void loop() {
   unsigned long now = millis();
   StaticJsonDocument<56> waterLevelJson;
 
-  int waterLevel = functions::getWaterLevel();
+  if(now -lastMsgTime > frequency) {
+    lastMsgTime = now;
 
-  /* creating a msg in the buffer */
-  snprintf(msg1, MSG_BUFFER_SIZE, "Water Level: %d", waterLevel);
+    int waterLevel = functions::getWaterLevel();
 
-  Serial.println(String("Publishing message: ") + msg1);
+    /* creating a msg in the buffer */
+    snprintf(msg1, MSG_BUFFER_SIZE, "Water Level: %d", waterLevel);
 
-  waterLevelJson["WaterLevel"] = waterLevel;
+    Serial.println(String("Publishing message: ") + msg1);
 
-  serializeJson(waterLevelJson, msg1);
+    waterLevelJson["WaterLevel"] = waterLevel;
 
-  /* publishing the msg */
-  client.publish(topic2, msg1);
+    serializeJson(waterLevelJson, msg1);
+
+    /* publishing the msg */
+    client.publish(topic2, msg1);
+  }
 }

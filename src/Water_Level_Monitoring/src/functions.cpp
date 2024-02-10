@@ -7,10 +7,10 @@ void functions::waterDetectionTask(void* parameter) {
     Sonar* sonar = new Sonar(TRIG_PIN, ECHO_PIN, MAXTIME);
     for (;;) {
 
-        int currentWaterLevel = sonar->toInt();
-
+      int currentWaterLevel = sonar->toInt();
+      
         waterLevel = currentWaterLevel;
-    }
+        }
 }
 
 int functions::getWaterLevel() {

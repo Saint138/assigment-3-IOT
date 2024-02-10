@@ -7,8 +7,6 @@ import random
 import time
 import requests
 
-
-
 # Flag per abilitare la modalità di test
 TEST_MODE = True
 
@@ -16,10 +14,10 @@ def request_data(url):
     if TEST_MODE:
         # Se siamo in modalità di test, generiamo dati casuali
         data = {
-            'tempo': time.strftime('%H:%M:%S'),
-            'altezza': random.uniform(0, 100),  # Altezza casuale tra 0 e 100
-            'livello': random.uniform(0, 100),  # Valore casuale di livello tra 0 e 100
-            'abilitato': random.choice([True, False])  # Valore casuale di abilitazione
+            'state': "TODO",  # TODO: In modalità test, lo stato è impostato come TODO
+            'waterLevel': random.randint(0, 100),  # Livello dell'acqua casuale tra 0 e 100
+            'dashboard': True,  # Dashboard in modalità test è sempre attiva
+            'automatic': True  # Modalità automatica in modalità test è sempre attiva
         }
         return data
     else:
@@ -31,16 +29,6 @@ def request_data(url):
         except requests.exceptions.RequestException as e:
             print(f"Errore nella richiesta: {str(e)}")
             return None
-
-def send_data_to_backend(url, value):
-    if not TEST_MODE:
-        # Invia dati al backend solo se non siamo in modalità di test
-        try:
-            response = requests.post(url, json={'value': value})
-            response.raise_for_status()
-            print("Dati inviati con successo al backend")
-        except requests.exceptions.RequestException as e:
-            print(f"Errore nell'invio dei dati al backend: {str(e)}")
 
 def main():
     app = tk.Tk()
@@ -55,14 +43,18 @@ def main():
     urlReceive = "http://192.168.150.205:8080/api/data"
     urlSend = "http://192.168.150.205:8080/api/river"  # Indirizzo per inviare dati al backend
     interval = 1000  # Ogni secondo
-    value_to_send = 42  # Valore intero da inviare al backend
 
-    send_data_to_backend(urlSend, value_to_send)  # Invio dei dati al backend
+    stato_label = tk.Label(app, text="Stato: ")
+    stato_label.pack()
+
+    modalita_label = tk.Label(app, text="Modalità: ")
+    modalita_label.pack()
 
     def periodic_request():
         data = request_data(urlReceive)
         if data:
             update_graph(ax, canvas, data)
+            update_labels(data)
 
         app.after(interval, periodic_request)
 
@@ -79,8 +71,8 @@ def main():
         if len(x) >= 10:
             x.pop(0)  # Rimuove il punto più vecchio
             y.pop(0)
-        x.append(data['tempo'])  # Aggiunge il nuovo punto
-        y.append(data['livello'])
+        x.append(time.strftime('%H:%M:%S'))  # Aggiunge il nuovo timestamp
+        y.append(data['waterLevel'])  # Aggiunge il nuovo livello dell'acqua
 
         ax.clear()
         ax.set_title('Dati dal Server')
@@ -91,6 +83,10 @@ def main():
             tick.set_rotation(45)
         ax.plot(x, y, marker='o')
         canvas.draw()
+
+    def update_labels(data):
+        stato_label.config(text="Stato: " + ("TODO" if TEST_MODE else data['state']))  # Imposta il testo della label stato
+        modalita_label.config(text="Modalità: " + ("TODO" if TEST_MODE else ("Automatic" if data['automatic'] else "Manual")))  # Imposta il testo della label modalità
 
     def toggle_manual_function():
         if manual_function_button["text"] == "Funzione manuale non attiva":
@@ -105,6 +101,16 @@ def main():
             value = round(manual_input_slider.get())
             send_data_to_backend(urlSend, value)
             print("Valore della barra:", value)  # Stampiamo il valore della barra sul terminale
+    
+    def send_data_to_backend(url, value):
+        if not TEST_MODE:
+            # Invia dati al backend solo se non siamo in modalità di test
+            try:
+                response = requests.post(url, json={'value': value})
+                response.raise_for_status()
+                print("Dati inviati con successo al backend")
+            except requests.exceptions.RequestException as e:
+                print(f"Errore nell'invio dei dati al backend: {str(e)}")
 
     # Bottone per attivare/disattivare la funzione manuale
     manual_function_button = tk.Button(app, text="Funzione manuale non attiva", command=toggle_manual_function)

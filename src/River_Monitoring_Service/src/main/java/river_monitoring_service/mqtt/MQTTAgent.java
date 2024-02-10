@@ -28,41 +28,45 @@ public class MQTTAgent extends AbstractVerticle {
         Gson msgToEsp = new Gson();
 
         client.connect(1883, "broker.mqtt-dashboard.com", c -> {
+            if(c.succeeded()) {
 
-            log("connected");
+                log("connected");
 
-            log("subscribing...");
+                log("subscribing...");
 
-            //If there is a new message from ESP, save waterLevel data into RiverState histories.
-            client.publishHandler(s -> {
-                System.out.println("There are new message in topic: " + s.topicName());
+                //If there is a new message from ESP, save waterLevel data into RiverState histories.
+                client.publishHandler(s -> {
+                    System.out.println("There are new message in topic: " + s.topicName());
 
-                if (s.topicName().equals(Topics.WATERLEVEL.getName())) {
-                    if (s.payload().toString().contains("{")) {
-                        waterLevel = msgToEsp.fromJson(s.payload().toString(), MQTTWaterLevel.class);
-                        RiverMonitoringSystemState.getInstance().getWaterLevelHistory().add(waterLevel);
+                    if (s.topicName().equals(Topics.WATERLEVEL.getName())) {
+                        if (s.payload().toString().contains("{")) {
+                            waterLevel = msgToEsp.fromJson(s.payload().toString(), MQTTWaterLevel.class);
+                            RiverMonitoringSystemState.getInstance().getWaterLevelHistory().add(waterLevel);
+                        }
                     }
-                }
 
-                System.out.println("Content of the message: " + s.payload().toString());
-                System.out.println("QoS: " + s.qosLevel());
+                    System.out.println("Content of the message: " + s.payload().toString());
+                    System.out.println("QoS: " + s.qosLevel());
 
-                if(RunService.getAutomatic()) {
-                    if(waterLevel.getWaterLevel() <= config.WL2) {
-                        MQTTFrequency frequency = new MQTTFrequency(config.F1);
-                        String jsonFrequency = msgToEsp.toJson(frequency);
-                        Buffer buffer = Buffer.buffer(jsonFrequency);
-                        client.publish(Topics.FREQUENCY.getName(), buffer, MqttQoS.AT_LEAST_ONCE, false, false);
-                    } else if(waterLevel.getWaterLevel() > config.WL2) {
-                        MQTTFrequency frequency = new MQTTFrequency(config.F2);
-                        String jsonFrequency = msgToEsp.toJson(frequency);
-                        Buffer buffer = Buffer.buffer(jsonFrequency);
-                        client.publish(Topics.FREQUENCY.getName(), buffer, MqttQoS.AT_LEAST_ONCE, false, false);
-                    } else {
-                        throw new IllegalArgumentException("Invalid water level value");
+                    if(RunService.getAutomatic()) {
+                        if(waterLevel.getWaterLevel() <= config.WL2) {
+                            MQTTFrequency frequency = new MQTTFrequency(config.F1);
+                            String jsonFrequency = msgToEsp.toJson(frequency);
+                            Buffer buffer = Buffer.buffer(jsonFrequency);
+                            client.publish(Topics.FREQUENCY.getName(), buffer, MqttQoS.AT_LEAST_ONCE, false, false);
+                        } else if(waterLevel.getWaterLevel() > config.WL2) {
+                            MQTTFrequency frequency = new MQTTFrequency(config.F2);
+                            String jsonFrequency = msgToEsp.toJson(frequency);
+                            Buffer buffer = Buffer.buffer(jsonFrequency);
+                            client.publish(Topics.FREQUENCY.getName(), buffer, MqttQoS.AT_LEAST_ONCE, false, false);
+                        } else {
+                            throw new IllegalArgumentException("Invalid water level value");
+                        }
                     }
-                }
-            }).subscribe(Map.of(Topics.WATERLEVEL.getName(), 2, Topics.FREQUENCY.getName(), 2));
+                }).subscribe(Map.of(Topics.WATERLEVEL.getName(), 2, Topics.FREQUENCY.getName(), 2));
+            } else if(c.failed()){
+                log("Failed to connect to the broker: " + c.cause());
+            }
         });
     }
 

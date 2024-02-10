@@ -12,3 +12,8 @@ class functions {
         static int getWaterLevel();
         static int waterLevel;
 };
+
+struct TaskParams {
+    int* frequencyPtr;
+    Sonar* sonar;
+};

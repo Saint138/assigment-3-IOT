@@ -24,7 +24,7 @@ public class RunService {
 
         //deploy http service in order to exchange data with the dashboard
         Vertx vertxHttp = Vertx.vertx();
-        RiverResource service = new RiverResource(3030);
+        RiverResource service = new RiverResource(1883);
         vertxHttp.deployVerticle(service);
 
         //deploy mqtt agent

@@ -52,36 +52,31 @@ void ledHandler(bool connectionStatus, Led* redLed, Led* greenLed) {
 }
 
 void setup_wifi() {
-  Serial.println("Connecting to WiFi");
+
+  delay(10);
+
+  Serial.println(String("Connecting to WiFi: ") + ssid);
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
 
-  int attempts = 0;
-  while (WiFi.waitForConnectResult() != WL_CONNECTED && attempts < MAX_WIFI_CONNECT_ATTEMPTS) {
-    Serial.print(".");
+  while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    attempts++;
+    Serial.print(".");
   }
 
-  if (WiFi.status() == WL_CONNECTED) {
-    Serial.println("");
-    Serial.println("WiFi connected");
-    Serial.println("IP address: ");
-    Serial.println(WiFi.localIP());
-    ledHandler(true, redLed, greenLed);
-  } else {
-    Serial.println("");
-    Serial.println("Failed to connect to WiFi");
-    ledHandler(false, redLed, greenLed);
-  }
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
 }
 
+/*
 void handleWifiFailure() {
   Serial.println("Failed to connect to WiFi. Retrying in 5 seconds...");
   delay(5000);  // Attendi 5 secondi prima di ritentare la connessione
   setup_wifi();  // Ritenta la connessione WiFi
-}
+} */
 
 void callbackFrequency(char* topic, byte* payload, unsigned int length) {
   Serial.println(String("Message arrived on [") + topic + "] len: " + length );
@@ -99,12 +94,12 @@ void callbackFrequency(char* topic, byte* payload, unsigned int length) {
 }
 
 void reconnect() {
-  int attempts = 0;
-  while (!client.connected() && attempts < MAX_WIFI_CONNECT_ATTEMPTS) {
+
+  while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
     ledHandler(false, redLed, greenLed);
 
-    String clientId = String("esp-") + String(random(0xffff), HEX);
+    String clientId = String("esp-client") + String(random(0xffff), HEX);
 
     if (client.connect(clientId.c_str())) {
       Serial.println("connected");
@@ -117,16 +112,11 @@ void reconnect() {
       ledHandler(false, redLed, greenLed);
       delay(5000);
     }
-
-    attempts++;
   }
 }
 
 void setup() {
-  if(!Serial) {
-    Serial.begin(115200);
-    delay(2000);
-  }
+  Serial.begin(115200);
   
   greenLed = new Led(GREEN_LED);
   redLed = new Led(RED_LED);
@@ -140,17 +130,12 @@ void setup() {
   client.setCallback(callbackFrequency);
 
   // Assign task to OS
-  xTaskCreatePinnedToCore(functions::waterDetectionTask, "Task1", 10000, NULL, 1, &Task1, 0);
+  Sonar* sonar = new Sonar(TRIG_PIN, ECHO_PIN, MAXTIME);
+  TaskParams params = { &frequency, sonar };
+  xTaskCreatePinnedToCore(functions::waterDetectionTask, "Task1", 10000, &params, 1, &Task1, 0);
 }
 
 void loop() {
-
-  // Gestione del WiFi
-  if (WiFi.status() != WL_CONNECTED) {
-    handleWifiFailure();
-    return;
-  }
-
   // Connessione MQTT
   if (!client.connected()) {
     reconnect();
@@ -160,27 +145,17 @@ void loop() {
   unsigned long now = millis();
   StaticJsonDocument<56> waterLevelJson;
 
-  if (now - lastMsgTime > (frequency)) {
-    lastMsgTime = now;
+  int waterLevel = functions::getWaterLevel();
 
-    int waterLevel = functions::getWaterLevel();
+  /* creating a msg in the buffer */
+  snprintf(msg1, MSG_BUFFER_SIZE, "Water Level: %d", waterLevel);
 
-    /* creating a msg in the buffer */
-    snprintf(msg1, MSG_BUFFER_SIZE, "Water Level: %d", waterLevel);
+  Serial.println(String("Publishing message: ") + msg1);
 
-    Serial.println(String("Publishing message: ") + msg1);
+  waterLevelJson["WaterLevel"] = waterLevel;
 
-    waterLevelJson["WaterLevel"] = waterLevel;
+  serializeJson(waterLevelJson, msg1);
 
-    serializeJson(waterLevelJson, msg1);
-
-    /* publishing the msg */
-    client.publish(topic2, msg1);
-  }
-  
-  // Handle WiFi failure independently in the loop
-  if (WiFi.status() != WL_CONNECTED) {
-    handleWifiFailure();
-  }
-  delay(10);
+  /* publishing the msg */
+  client.publish(topic2, msg1);
 }

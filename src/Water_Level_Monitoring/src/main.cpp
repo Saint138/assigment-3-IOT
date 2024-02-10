@@ -17,8 +17,8 @@ char str[56];
 int frequency = 0;
 
 /* wifi network info */
-const char* ssid = "Redmi Note 8 Pro";
-const char* password = "GiacomoFoschi";
+const char* ssid = "Martino's Galaxy A52";
+const char* password = "xwla1317";
 
 /* MQTT server address */
 const char* mqtt_server = "broker.mqtt-dashboard.com";
@@ -125,6 +125,7 @@ void reconnect() {
 void setup() {
   if(!Serial) {
     Serial.begin(115200);
+    delay(2000);
   }
   
   greenLed = new Led(GREEN_LED);
@@ -174,4 +175,5 @@ void loop() {
   if (WiFi.status() != WL_CONNECTED) {
     handleWifiFailure();
   }
+  delay(10);
 }

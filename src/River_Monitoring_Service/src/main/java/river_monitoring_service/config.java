@@ -7,7 +7,7 @@ public class config {
     public final static int WL3 = 8;
     public final static int WL4 = 4;
     
-    public final static int F1 = 3000;
-    public final static int F2 = 1000;
+    public final static int F1 = 5000;
+    public final static int F2 = 3000;
 
 }

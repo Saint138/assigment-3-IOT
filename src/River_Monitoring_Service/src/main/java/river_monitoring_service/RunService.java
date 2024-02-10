@@ -141,7 +141,7 @@ public class RunService {
         } else if (waterLevel > config.WL1) {
             return "ALLARM-TOO-LOW";
         } else {
-            return "ERROR on RunService";
+            return "NORMAL";
         }
     }
 

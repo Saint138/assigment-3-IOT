@@ -39,6 +39,6 @@ public class SerialCommunication {
 
 	@Override
 	public String toString() {
-		return "SerialCommunication: automatic=" + automatic + ", valveOpening=" + valveOpening + ", dashboard=" + dashboard;
+		return valveOpening;
 	}
 }

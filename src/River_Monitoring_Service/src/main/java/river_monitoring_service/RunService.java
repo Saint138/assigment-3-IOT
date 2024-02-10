@@ -58,11 +58,13 @@ public class RunService {
                     Optional<DashboardMessage> dashboardMsg = RiverMonitoringSystemState.getInstance().getLastDashboardMessage();
 
                     if (dashboardMsg.isPresent()) {
+                        System.out.println("New Dashboard Msg available: " + dashboardMsg.get().toString());
                     	setAutomatic(false);
                         setDashboard(true);
                     	arduinoMsg = new SerialCommunication(false, dashboardMsg.toString(), true);
                     	sendMessage(arduinoMsg, arduinoChannel);
                     } else if (lastWaterLevel.isPresent()) {
+                        System.out.println("New WaterLevel Msg available: " + lastWaterLevel.get().toString());
                         setDashboard(false);
                         setAutomatic(true);
                         arduinoMsg = new SerialCommunication(true, getRiverState(lastWaterLevel.get().getWaterLevel()) , false);
@@ -91,6 +93,7 @@ public class RunService {
                             if(!msg.contains("null")) {
 	                            if(msg.contains("DASHBOARD: false")) {
 	                                setDashboard(false);
+                                    setAutomatic(false);
 	                            }
                                 if(msg.contains("AUTOMATIC: true")) {
                                     setAutomatic(true);

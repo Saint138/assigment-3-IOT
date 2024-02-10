@@ -104,7 +104,6 @@ public class RunService {
                                 }
                             }
                         }
-                        Thread.sleep(1000);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

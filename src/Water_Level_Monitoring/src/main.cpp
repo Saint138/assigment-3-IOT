@@ -143,7 +143,14 @@ void setup() {
 }
 
 void loop() {
-  // try to connect to the server
+
+  // Gestione del WiFi
+  if (WiFi.status() != WL_CONNECTED) {
+    handleWifiFailure();
+    return;
+  }
+
+  // Connessione MQTT
   if (!client.connected()) {
     reconnect();
   }

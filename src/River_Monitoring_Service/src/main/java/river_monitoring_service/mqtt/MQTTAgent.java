@@ -46,22 +46,19 @@ public class MQTTAgent extends AbstractVerticle {
                     }
 
                     System.out.println("Content of the message: " + s.payload().toString());
+                    System.out.println("QoS: " + s.qosLevel());
 
                     if(RunService.getAutomatic()) {
                         if(waterLevel.getWaterLevel() <= config.WL2) {
                             MQTTFrequency frequency = new MQTTFrequency(config.F2);
                             String jsonFrequency = msgToEsp.toJson(frequency);
                             Buffer buffer = Buffer.buffer(jsonFrequency);
-                            if(frequency != RiverMonitoringSystemState.getInstance().getLastFrequency().get()) {
-                                client.publish(Topics.FREQUENCY.getName(), buffer, MqttQoS.AT_LEAST_ONCE, false, false);
-                            }
+                            client.publish(Topics.FREQUENCY.getName(), buffer, MqttQoS.AT_LEAST_ONCE, false, false);
                         } else if(waterLevel.getWaterLevel() > config.WL2) {
                             MQTTFrequency frequency = new MQTTFrequency(config.F1);
                             String jsonFrequency = msgToEsp.toJson(frequency);
-                            Buffer buffer = Buffer.buffer(jsonFrequency);
-                            if(frequency != RiverMonitoringSystemState.getInstance().getLastFrequency().get()) {
-                                client.publish(Topics.FREQUENCY.getName(), buffer, MqttQoS.AT_LEAST_ONCE, false, false);
-                            }
+                            Buffer buffer = Buffer.buffer(jsonFrequency);if(frequency != RiverMonitoringSystemState.getInstance().getLastFrequency().get())
+                            client.publish(Topics.FREQUENCY.getName(), buffer, MqttQoS.AT_LEAST_ONCE, false, false);
                         } else {
                             throw new IllegalArgumentException("Invalid water level value");
                         }

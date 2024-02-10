@@ -9,6 +9,8 @@ void SerialTask::init(int period) {
 }
 
 void SerialTask::tick() {
+    String state;
+
     if (isMsgAvailable()) {
         bool automatic;
         bool dashboard;
@@ -47,7 +49,13 @@ void SerialTask::tick() {
         }
     }
 
-    Serial.println("AUTOMATIC: " + String(waterController->isAutomatic() ? "true" : "false") + ", DASHBOARD: " + String(waterController->isDashboard() ? "true" : "false") + ", STATE: " + waterController->stateAsString());
+    if (waterController->isAutomatic()) {
+        state = waterController->stateAsString();
+    } else {
+        state = String(waterController->getValveOpening());
+    }
+
+    Serial.println("AUTOMATIC: " + String(waterController->isAutomatic() ? "true" : "false") + ", DASHBOARD: " + String(waterController->isDashboard() ? "true" : "false") + ", STATE: " + state);
 }
 
 bool SerialTask::isMsgAvailable() {

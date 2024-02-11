@@ -47,6 +47,10 @@ public class RiverMonitoringSystemState {
 		return waterLevelHistory;
 	}
 
+	public synchronized void addWaterLevel(final MQTTWaterLevel waterLevel) {
+		this.waterLevelHistory.add(waterLevel);
+	}
+
 	public synchronized Optional<MQTTWaterLevel> getLastWaterLevel() {
 		if(waterLevelHistory.size() == 0) {
 			return Optional.empty();
@@ -64,4 +68,6 @@ public class RiverMonitoringSystemState {
 	public synchronized void addFrequency(final MQTTFrequency frequency) {
 		this.frequencyHistory.add(frequency);
 	}
+
+
 }

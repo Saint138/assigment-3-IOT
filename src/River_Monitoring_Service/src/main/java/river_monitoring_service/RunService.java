@@ -65,7 +65,7 @@ public class RunService {
                     	arduinoMsg = new SerialCommunication(false, dashboardMsg.toString(), true);
                     	sendMessage(arduinoMsg, arduinoChannel);
                     } else if (lastWaterLevel.isPresent()) {
-                        String newmsg = "New WaterLevel Msg available: " + lastWaterLevel.get().getWaterLevel();
+                        String newmsg = "New WaterLevel Msg available: " + String.valueOf(lastWaterLevel.get().getWaterLevel());
                         if(oldmsg != newmsg) {
                             System.out.println(newmsg);
                             oldmsg = newmsg;

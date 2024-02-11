@@ -41,12 +41,9 @@ public class MQTTAgent extends AbstractVerticle {
                     if (s.topicName().equals(Topics.WATERLEVEL.getName())) {
                         if (s.payload().toString().contains("{")) {
                             waterLevel = msgToEsp.fromJson(s.payload().toString(), MQTTWaterLevel.class);
-                            RiverMonitoringSystemState.getInstance().getWaterLevelHistory().add(waterLevel);
+                            RiverMonitoringSystemState.getInstance().addWaterLevel(waterLevel);
                         }
                     }
-
-                    System.out.println("Content of the message: " + s.payload().toString());
-                    System.out.println("QoS: " + s.qosLevel());
 
                     if(RunService.getAutomatic()) {
                         if(RiverMonitoringSystemState.getInstance().getLastFrequency().isEmpty()) {
@@ -67,6 +64,9 @@ public class MQTTAgent extends AbstractVerticle {
                             client.publish(Topics.FREQUENCY.getName(), buffer, MqttQoS.AT_LEAST_ONCE, false, false);
                         }
                     }
+
+                    System.out.println("Content of the message: " + s.payload().toString());
+                    System.out.println("QoS: " + s.qosLevel());
                 }).subscribe(Map.of(Topics.WATERLEVEL.getName(), 2, Topics.FREQUENCY.getName(), 2));
             } else if(c.failed()){
                 log("Failed to connect to the broker: " + c.cause());

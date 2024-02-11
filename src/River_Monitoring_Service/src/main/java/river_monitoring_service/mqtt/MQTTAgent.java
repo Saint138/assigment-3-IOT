@@ -53,8 +53,6 @@ public class MQTTAgent extends AbstractVerticle {
                             RiverMonitoringSystemState.getInstance().addFrequency(new MQTTFrequency(config.F1));
                         }
                         MQTTFrequency frequency;
-                        String jsonFrequency;
-                        Buffer buffer;
                         if(waterLevel.getWaterLevel() <= config.WL2) {
                             frequency = new MQTTFrequency(config.F2);
                         } else if(waterLevel.getWaterLevel() > config.WL2) {
@@ -62,8 +60,8 @@ public class MQTTAgent extends AbstractVerticle {
                         } else {
                             throw new IllegalArgumentException("Invalid water level value");
                         }
-                        jsonFrequency = msgToEsp.toJson(frequency);
-                        buffer = Buffer.buffer(jsonFrequency);
+                        String jsonFrequency = msgToEsp.toJson(frequency);
+                        Buffer buffer = Buffer.buffer(jsonFrequency);
                         if(frequency != RiverMonitoringSystemState.getInstance().getLastFrequency().get()) {
                             RiverMonitoringSystemState.getInstance().addFrequency(frequency);
                             client.publish(Topics.FREQUENCY.getName(), buffer, MqttQoS.AT_LEAST_ONCE, false, false);

@@ -8,7 +8,7 @@ import time
 import requests
 
 # Flag per abilitare la modalità di test
-TEST_MODE = True
+TEST_MODE = False
 
 def request_data(url):
     if TEST_MODE:
@@ -40,8 +40,8 @@ def main():
     ax = figure.add_subplot(1, 1, 1)
     figure.subplots_adjust(bottom=0.3)
 
-    urlReceive = "http://192.168.150.205:8080/api/data"
-    urlSend = "http://192.168.150.205:8080/api/river"  # Indirizzo per inviare dati al backend
+    urlReceive = "http://192.168.150.205:1883/api/data"
+    urlSend = "http://192.168.150.205:1883/api/river"  # Indirizzo per inviare dati al backend
     interval = 1000  # Ogni secondo
 
     stato_label = tk.Label(app, text="Stato: ")

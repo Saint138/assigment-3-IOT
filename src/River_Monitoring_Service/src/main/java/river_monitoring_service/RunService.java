@@ -24,7 +24,7 @@ public class RunService {
 
         //deploy http service in order to exchange data with the dashboard
         Vertx vertxHttp = Vertx.vertx();
-        RiverResource service = new RiverResource(1883);
+        RiverResource service = new RiverResource(8080);
         vertxHttp.deployVerticle(service);
 
         //deploy mqtt agent
@@ -62,7 +62,7 @@ public class RunService {
                         System.out.println("New Dashboard Msg available: " + dashboardMsg.get().toString());
                     	setAutomatic(false);
                         setDashboard(true);
-                    	arduinoMsg = new SerialCommunication(false, dashboardMsg.toString(), true);
+                    	arduinoMsg = new SerialCommunication(false, dashboardMsg.get().toString(), true);
                     	sendMessage(arduinoMsg, arduinoChannel);
                     } else if (lastWaterLevel.isPresent()) {
                         String newmsg = "New WaterLevel Msg available: " + String.valueOf(lastWaterLevel.get().getWaterLevel());

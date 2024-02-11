@@ -26,6 +26,7 @@ public class RiverMonitoringSystemState {
 		this.frequencyHistory = new ArrayList<>();
 		this.waterLevelHistory = new ArrayList<>();
 		this.dashboardMessages = new ArrayDeque<>();
+		this.frequencyHistory.add(new MQTTFrequency(config.F1));
 	}
 
 	public static RiverMonitoringSystemState getInstance() {

@@ -17,7 +17,7 @@ import io.vertx.mqtt.MqttClient;
  * */
 public class MQTTAgent extends AbstractVerticle {
 
-    private MQTTWaterLevel waterLevel = new MQTTWaterLevel(0);
+    private MQTTWaterLevel waterLevel;
 
     public MQTTAgent() {
     }
@@ -38,17 +38,17 @@ public class MQTTAgent extends AbstractVerticle {
                 client.publishHandler(s -> {
                     System.out.println("There are new message in topic: " + s.topicName());
 
+                    
                     if (s.topicName().equals(Topics.WATERLEVEL.getName())) {
                         if (s.payload().toString().contains("{")) {
                             waterLevel = msgToEsp.fromJson(s.payload().toString(), MQTTWaterLevel.class);
                             RiverMonitoringSystemState.getInstance().addWaterLevel(waterLevel);
+
                         }
-                    }
+                    } 
 
                     if(RunService.getAutomatic()) {
-                        if(RiverMonitoringSystemState.getInstance().getLastFrequency().isEmpty()) {
-                            RiverMonitoringSystemState.getInstance().addFrequency(new MQTTFrequency(config.F1));
-                        }
+                        
                         MQTTFrequency frequency;
                         if(waterLevel.getWaterLevel() <= config.WL2) {
                             frequency = new MQTTFrequency(config.F2);
@@ -59,10 +59,9 @@ public class MQTTAgent extends AbstractVerticle {
                         }
                         String jsonFrequency = msgToEsp.toJson(frequency);
                         Buffer buffer = Buffer.buffer(jsonFrequency);
-                        if(frequency != RiverMonitoringSystemState.getInstance().getLastFrequency().get()) {
-                            RiverMonitoringSystemState.getInstance().addFrequency(frequency);
-                            client.publish(Topics.FREQUENCY.getName(), buffer, MqttQoS.AT_LEAST_ONCE, false, false);
-                        }
+                        RiverMonitoringSystemState.getInstance().addFrequency(frequency);
+                        client.publish(Topics.FREQUENCY.getName(), buffer, MqttQoS.AT_LEAST_ONCE, false, false);
+                        
                     }
 
                     System.out.println("Content of the message: " + s.payload().toString());

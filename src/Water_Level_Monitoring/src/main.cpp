@@ -18,8 +18,8 @@ int frequency = 5000;
 
 
 /* wifi network info */
-const char* ssid = "TP-Link_5B9B_5G";
-const char* password = "82189105";
+const char* ssid = "Martino's Galaxy A52";
+const char* password = "xwla1317";
 
 /* MQTT server address */
 const char* mqtt_server = "broker.mqtt-dashboard.com";
@@ -101,7 +101,7 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     ledHandler(false, redLed, greenLed);
 
-    String clientId = String("esp-client") + String(random(0xffff), HEX);
+    String clientId = String("esp-") + String(random(0xffff), HEX);
 
     if (client.connect(clientId.c_str())) {
       Serial.println("connected");
@@ -118,8 +118,8 @@ void reconnect() {
 }
 
 void setup() {
+
   Serial.begin(115200);
-  
   greenLed = new Led(GREEN_LED);
   redLed = new Led(RED_LED);
 
@@ -155,7 +155,7 @@ void loop() {
 
     Serial.println(String("Publishing message: ") + msg1);
 
-    waterLevelJson["WaterLevel"] = waterLevel;
+    waterLevelJson["waterLevel"] = waterLevel;
 
     serializeJson(waterLevelJson, msg1);
 

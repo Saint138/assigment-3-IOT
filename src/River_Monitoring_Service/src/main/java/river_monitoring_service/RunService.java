@@ -52,7 +52,7 @@ public class RunService {
 
             // thread for sending msg to arduino
             final Thread sender = new Thread(() -> {
-                String oldmsg = "";
+                String oldMsg = "";
                 while (true) {
 
                     Optional<MQTTWaterLevel> lastWaterLevel = RiverMonitoringSystemState.getInstance().getLastWaterLevel();
@@ -66,9 +66,9 @@ public class RunService {
                     	sendMessage(arduinoMsg, arduinoChannel);
                     } else if (lastWaterLevel.isPresent()) {
                         String newmsg = "New WaterLevel Msg available: " + String.valueOf(lastWaterLevel.get().getWaterLevel());
-                        if(oldmsg != newmsg) {
+                        if(!newmsg.equals(oldMsg)) {
+                            oldMsg = newmsg;
                             System.out.println(newmsg);
-                            oldmsg = newmsg;
                         }
                         setDashboard(false);
                         setAutomatic(true);
@@ -86,13 +86,16 @@ public class RunService {
 
             // thread for receiving msg from arduino and store it
             final Thread receiver = new Thread(() -> {
+                String oldMsg="";
                 while (true) {
                     try {
                         if (arduinoChannel.isMsgAvailable()) {
                             String msg;
                             msg = arduinoChannel.receiveMsg();
-
-                            System.out.println("New Arduino Msg available: " + msg);
+                            if(!msg.equals(oldMsg)) {
+                                oldMsg = msg; 
+                                System.out.println("New Arduino Msg available: " + msg);
+                            }
 
                             //this if ignore "null" arduino packet
                             if(!msg.contains("null")) {

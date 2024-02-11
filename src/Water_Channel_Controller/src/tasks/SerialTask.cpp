@@ -6,6 +6,7 @@ SerialTask::SerialTask(WaterController* waterController) {
 
 void SerialTask::init(int period) {
   Task::init(period);
+  this->lastMsg = "";
 }
 
 void SerialTask::tick() {
@@ -55,7 +56,11 @@ void SerialTask::tick() {
         state = String(waterController->getValveOpening());
     }
 
-    Serial.println("AUTOMATIC: " + String(waterController->isAutomatic() ? "true" : "false") + ", DASHBOARD: " + String(waterController->isDashboard() ? "true" : "false") + ", STATE: " + state);
+    String newMsg = "AUTOMATIC: " + String(waterController->isAutomatic() ? "true" : "false") + ", DASHBOARD: " + String(waterController->isDashboard() ? "true" : "false") + ", STATE: " + state;
+    if(newMsg != lastMsg) {
+        Serial.println(newMsg);
+        lastMsg = newMsg;
+    }
 }
 
 bool SerialTask::isMsgAvailable() {

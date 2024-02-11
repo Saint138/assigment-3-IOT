@@ -60,4 +60,8 @@ public class RiverMonitoringSystemState {
 		}
 		return Optional.of(frequencyHistory.get(frequencyHistory.size() - 1));
 	}
+
+	public synchronized void addFrequency(final MQTTFrequency frequency) {
+		this.frequencyHistory.add(frequency);
+	}
 }

@@ -16,9 +16,10 @@ char str[56];
 /* Take global variables */
 int frequency = 5000;
 
+
 /* wifi network info */
-const char* ssid = "Martino's Galaxy A52";
-const char* password = "xwla1317";
+const char* ssid = "TP-Link_5B9B_5G";
+const char* password = "82189105";
 
 /* MQTT server address */
 const char* mqtt_server = "broker.mqtt-dashboard.com";
@@ -30,7 +31,7 @@ const char* topic2 = "waterLevel";
 /*LED pointers*/
 Led* redLed;
 Led* greenLed;
-Sonar* sonar = new Sonar(TRIG_PIN, ECHO_PIN, MAXTIME);
+Sonar* sonar = new Sonar(ECHO_PIN, TRIG_PIN, MAXTIME);
 
 /* MQTT client management */
 
